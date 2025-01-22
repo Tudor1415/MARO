@@ -49,7 +49,7 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
     plt.scatter(
         random_pca[::f, 0],
         random_pca[::f, 1],
-        c=plt.cm.gray(normalized_scores[::f]),
+        c=plt.cm.Reds(normalized_scores[::f]),
         alpha=normalized_scores[::f],
         s=sizes[::f],
         label="Random Permutations",
@@ -59,7 +59,7 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
     plt.scatter(
         specific_pca[:, 0],
         specific_pca[:, 1],
-        c="red",
+        c="blue",
         alpha=1,
         label="Provided Permutations",
     )
