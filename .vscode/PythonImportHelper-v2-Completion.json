@@ -99,7 +99,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def benchmark_starting_solution_instance(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Runs the ILS algorithm with different starting solutions and benchmarks its performance.\n    Starting solutions are generated using:\n        - a monotone ordering\n        - a random permutation\n        - Becker's constructive heuristic\n    \"\"\"\n    n = matrix.shape[0]\n    # Monotone ordering",
+        "peekOfCode": "def benchmark_starting_solution_instance(\n    matrix, max_iter=100, nb_repetitions=10, debug=False\n):\n    \"\"\"\n    Runs the ILS algorithm with different starting solutions and benchmarks its performance.\n    Starting solutions are generated using:\n        - a random permutation\n        - Becker's constructive heuristic\n    \"\"\"\n    n = matrix.shape[0]",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -126,7 +126,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def print_grasp_constructive_benchmark_statistics(results):\n    \"\"\"\n    Prints the results of the GRASP constructive heuristic benchmark.\n    \"\"\"\n    scores = {}\n    for key, values in results.items():\n        for i in range(len(values)):\n            alpha, value = values[i]\n            scores.get(alpha, []).append(value)\n    for alpha, value in scores.items():",
+        "peekOfCode": "def print_grasp_constructive_benchmark_statistics(results, debug=False):\n    \"\"\"\n    Prints the results of the GRASP constructive heuristic benchmark.\n    \"\"\"\n    scores = {}\n    for key, values in results.items():\n        for i in range(len(values)):\n            alpha, value = values[i]\n            if alpha not in scores:\n                scores[alpha] = []",
         "detail": "benchmark",
         "documentation": {}
     },

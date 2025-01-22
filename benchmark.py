@@ -49,37 +49,32 @@ def print_neighbourhood_benchmark_statistics(results):
     )
 
 
-def benchmark_starting_solution_instance(matrix, max_iter=100, debug=False):
+def benchmark_starting_solution_instance(
+    matrix, max_iter=100, nb_repetitions=10, debug=False
+):
     """
     Runs the ILS algorithm with different starting solutions and benchmarks its performance.
     Starting solutions are generated using:
-        - a monotone ordering
         - a random permutation
         - Becker's constructive heuristic
     """
     n = matrix.shape[0]
 
-    # Monotone ordering
-    monotone_permutation = list(range(n))
-    _, best_value_monotone = ILS(
-        matrix,
-        objective_function,
-        lambda x: monotone_permutation,
-        visit_NI,
-        max_iter,
-        debug,
-    )
-
+    random_score_values = []
     # Random permutation
-    random_permutation = np.random.permutation(n).tolist()
-    _, best_value_random = ILS(
-        matrix,
-        objective_function,
-        lambda x: random_permutation,
-        visit_NI,
-        max_iter,
-        debug,
-    )
+    for _ in range(nb_repetitions):
+        random_permutation = np.random.permutation(n).tolist()
+        _, best_value_random = ILS(
+            matrix,
+            objective_function,
+            lambda x: random_permutation,
+            visit_NI,
+            max_iter,
+            debug,
+        )
+        random_score_values.append(best_value_random)
+
+    mean_random_score = np.mean(random_score_values)
 
     # Becker's constructive heuristic
     _, best_value_becker = ILS(
@@ -92,11 +87,10 @@ def benchmark_starting_solution_instance(matrix, max_iter=100, debug=False):
     )
 
     if debug:
-        print(f"Best value Monotone = {best_value_monotone}")
-        print(f"Best value Random = {best_value_random}")
+        print(f"Best value Random = {mean_random_score}")
         print(f"Best value Becker = {best_value_becker}")
 
-    return (best_value_monotone, best_value_random, best_value_becker)
+    return (mean_random_score, best_value_becker)
 
 
 def print_starting_solution_benchmark_statistics(results):
@@ -141,7 +135,7 @@ def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):
     return tuple(results)
 
 
-def print_grasp_constructive_benchmark_statistics(results):
+def print_grasp_constructive_benchmark_statistics(results, debug=False):
     """
     Prints the results of the GRASP constructive heuristic benchmark.
     """
@@ -149,10 +143,18 @@ def print_grasp_constructive_benchmark_statistics(results):
     for key, values in results.items():
         for i in range(len(values)):
             alpha, value = values[i]
-            scores.get(alpha, []).append(value)
+            if alpha not in scores:
+                scores[alpha] = []
+            scores[alpha].append(value)
 
+    if debug:
+        print("Scores by alpha:")
+        for alpha, value in scores.items():
+            print(f"Alpha = {alpha}: Values = {value}")
+
+    print("Statistics:")
     for alpha, value in scores.items():
-        print(f"Alpha = {alpha}: Value = {np.mean(value):.2f}±{np.std(value):.2f}")
+        print(f"Alpha = {alpha}: Value = {np.mean(value):.2f} ± {np.std(value):.2f}")
 
 
 def read_square_matrix_from_file(file_path, debug=False):
@@ -240,7 +242,9 @@ def benchmark(
     """
     results = {}
     files = [
-        file_name for file_name in os.listdir("instances") if file_name.endswith(".mat")
+        "instances/" + file_name
+        for file_name in os.listdir("instances")
+        if file_name.endswith(".mat")
     ]
 
     for file_name in tqdm(files, desc="Processing files"):
