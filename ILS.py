@@ -265,6 +265,7 @@ def ILS(
     best_permutation = constructive_heuristic(matrix)
     best_value = objective_function(matrix, best_permutation)
 
+    visited = [best_permutation]
     if debug:
         print("Initial permutation:", best_permutation)
         print("Initial objective value:", best_value)
@@ -272,6 +273,7 @@ def ILS(
     for iteration in range(max_iter):
         # Perform a local search on the current solution
         new_permutation = visit_N(matrix, best_permutation, objective_function)
+        visited.append(new_permutation)
 
         # Update the best solution if a better one is found
         new_value = objective_function(matrix, new_permutation)
@@ -283,4 +285,7 @@ def ILS(
                     f"Iteration {iteration}: Found better permutation {new_permutation} with value {new_value}"
                 )
 
-    return best_permutation, best_value
+    if debug:
+        return best_permutation, best_value, visited
+    else:
+        return best_permutation, best_value
