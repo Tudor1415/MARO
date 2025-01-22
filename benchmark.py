@@ -239,7 +239,9 @@ def benchmark(
             - value: A tuple of lists containing the results for the NI and NS neighborhoods.
     """
     results = {}
-    files = [file_name for file_name in os.listdir() if file_name.endswith(".mat")]
+    files = [
+        file_name for file_name in os.listdir("instances") if file_name.endswith(".mat")
+    ]
 
     for file_name in tqdm(files, desc="Processing files"):
         try:
