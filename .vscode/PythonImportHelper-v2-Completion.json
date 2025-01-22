@@ -1,0 +1,349 @@
+[
+    {
+        "label": "construct_grasp",
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "isExtraImport": true,
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "*",
+        "importPath": "ILS",
+        "description": "ILS",
+        "isExtraImport": true,
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "copy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "copy",
+        "description": "copy",
+        "detail": "copy",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "json",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "json",
+        "description": "json",
+        "detail": "json",
+        "documentation": {}
+    },
+    {
+        "label": "numpy",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "numpy",
+        "description": "numpy",
+        "detail": "numpy",
+        "documentation": {}
+    },
+    {
+        "label": "tqdm",
+        "importPath": "tqdm",
+        "description": "tqdm",
+        "isExtraImport": true,
+        "detail": "tqdm",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "benchmark_neighbourhood_instance",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def benchmark_neighbourhood_instance(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Runs the ILS algorithm and benchmarks its performance.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - max_iter: Maximum number of iterations for each ILS run.\n    - debug: Boolean flag to enable/disable debugging statements.\n    \"\"\"\n    _, best_value_NI = ILS(\n        matrix,",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "print_neighbourhood_benchmark_statistics",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def print_neighbourhood_benchmark_statistics(results):\n    improvements = []\n    for key, (n_i, n_s) in results.items():\n        improvement = (n_i - n_s) / n_s  # Relative improvement\n        improvements.append(improvement)\n    # Compute mean and standard deviation\n    mean_improvement = np.mean(improvements)\n    std_improvement = np.std(improvements)\n    print(\n        f\"Overall mean relative improvement of N_I over N_S: {mean_improvement*100:.2f}% ± {std_improvement*100:.2f}%\"",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "benchmark_starting_solution_instance",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def benchmark_starting_solution_instance(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Runs the ILS algorithm with different starting solutions and benchmarks its performance.\n    Starting solutions are generated using:\n        - a monotone ordering\n        - a random permutation\n        - Becker's constructive heuristic\n    \"\"\"\n    n = matrix.shape[0]\n    # Monotone ordering",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "print_starting_solution_benchmark_statistics",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def print_starting_solution_benchmark_statistics(results):\n    \"\"\"\n    Prints the relative improvements of the different starting solutions.\n    \"\"\"\n    improvements_becker_random, improvements_random_monotone = [], []\n    for key, (monotone, random, becker) in results.items():\n        improvement_becker_random = (becker - random) / random\n        improvements_becker_random.append(improvement_becker_random)\n        improvement_random_monotone = (random - monotone) / monotone\n        improvements_random_monotone.append(improvement_random_monotone)",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "benchmark_grasp_constructive",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):\n    \"\"\"\n    Runs the ILS algorithm with GRASP constructive heuristic with different alphas and benchmarks its performance.\n    \"\"\"\n    alpha_values = [0.001, 0.005, 0.01, 0.05, 0.1]\n    results = []\n    for alpha in alpha_values:\n        for _ in range(nb_repeats):\n            permutation = construct_grasp(matrix, alpha)\n            value = objective_function(matrix, permutation)",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "print_grasp_constructive_benchmark_statistics",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def print_grasp_constructive_benchmark_statistics(results):\n    \"\"\"\n    Prints the results of the GRASP constructive heuristic benchmark.\n    \"\"\"\n    scores = {}\n    for key, values in results.items():\n        for i in range(len(values)):\n            alpha, value = values[i]\n            scores.get(alpha, []).append(value)\n    for alpha, value in scores.items():",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "read_square_matrix_from_file",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def read_square_matrix_from_file(file_path, debug=False):\n    \"\"\"\n    Reads a square matrix from a file where the size is specified at the beginning.\n    Parameters:\n        file_path (str): Path to the file containing the matrix.\n        debug (bool): Boolean flag to enable/disable debugging statements.\n    Returns:\n        dict: A dictionary containing:\n            - 'header': The header line of the file.\n            - 'size': The size of the square matrix (int).",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "convert_to_native",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def convert_to_native(obj):\n    if isinstance(obj, np.integer):\n        return int(obj)\n    elif isinstance(obj, np.floating):\n        return float(obj)\n    elif isinstance(obj, np.ndarray):\n        return obj.tolist()\n    else:\n        return obj\ndef process_file(file_name, benchmark_instance, max_iter, debug):",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "process_file",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def process_file(file_name, benchmark_instance, max_iter, debug):\n    matrix = read_square_matrix_from_file(file_name, debug)[\"matrix\"]\n    results = benchmark_instance(matrix, max_iter, debug)\n    return file_name, results\ndef benchmark(\n    filename, benchmark_instance, print_statistics, max_iter=100, debug=False\n):\n    \"\"\"\n    Reads all the files in the current directory that have the .mat extension and runs the benchmark_instance function on them.\n    Parameters:",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "benchmark",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def benchmark(\n    filename, benchmark_instance, print_statistics, max_iter=100, debug=False\n):\n    \"\"\"\n    Reads all the files in the current directory that have the .mat extension and runs the benchmark_instance function on them.\n    Parameters:\n        - filename (str): The name of the file to print the results to.\n        - benchmark_instance (callable): The function to run for benchmarking each file.\n        - print_statistics (callable): The function to print the statistics of the results.\n        - max_iter (int, optional): Maximum number of iterations for each ILS run. Default is 100.",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "contribution",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def contribution(candidate, matrix):\n    \"\"\"\n    Calculates the contribution of a candidate based on the given matrix.\n    Parameters:\n    - candidate: Index of the candidate.\n    - matrix: 2D array representing the cost matrix.\n    Returns:\n    - sum: Total contribution of the candidate.\n    \"\"\"\n    total = 0",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "objective_function",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def objective_function(matrix, permutation):\n    \"\"\"\n    Computes the objective function value for a given permutation.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - permutation: List of indices representing the current order.\n    Returns:\n    - objective_value: The computed objective value for the permutation.\n    \"\"\"\n    objective_value = 0",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_candidates",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def calculate_candidates(current_sol, matrix):\n    \"\"\"\n    Calculates the list of candidates not in the current solution.\n    Parameters:\n    - current_sol: List of indices in the current solution.\n    - matrix: 2D array representing the cost matrix.\n    Returns:\n    - candidates: List of tuples (candidate index, contribution).\n    \"\"\"\n    candidates = []",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_rcl",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def calculate_rcl(candidates, alpha):\n    \"\"\"\n    Calculates the Restricted Candidate List (RCL).\n    Parameters:\n    - candidates: List of tuples (candidate index, contribution).\n    - alpha: Parameter to control the size of the RCL.\n    Returns:\n    - rcl: Restricted Candidate List.\n    \"\"\"\n    min_cost = candidates[0][1]",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "construct_grasp",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def construct_grasp(matrix, alpha=0.1):\n    \"\"\"\n    Constructs a solution using the GRASP (Greedy Randomized Adaptive Search Procedure) heuristic.\n    Parameters:\n    - matrix: 2D array representing the cost matrix.\n    - alpha: Parameter to control the size of the RCL (default 0.1).\n    Returns:\n    - permutation: Constructed solution as a list of indices.\n    \"\"\"\n    permutation = []",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "contribution",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def contribution(candidate, matrix):\n    \"\"\"\n    Calculates the contribution of a candidate based on the given matrix.\n    Parameters:\n    - candidate: Index of the candidate.\n    - matrix: 2D array representing the cost matrix.\n    Returns:\n    - sum: Total contribution of the candidate.\n    \"\"\"\n    total = 0",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "objective_function",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def objective_function(matrix, permutation):\n    \"\"\"\n    Computes the objective function value for a given permutation.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - permutation: List of indices representing the current order.\n    Returns:\n    - objective_value: The computed objective value for the permutation.\n    \"\"\"\n    objective_value = 0",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_candidates",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def calculate_candidates(current_sol, matrix):\n    \"\"\"\n    Calculates the list of candidates not in the current solution.\n    Parameters:\n    - current_sol: List of indices in the current solution.\n    - matrix: 2D array representing the cost matrix.\n    Returns:\n    - candidates: List of tuples (candidate index, contribution).\n    \"\"\"\n    candidates = []",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "calculate_rcl",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def calculate_rcl(candidates, alpha):\n    \"\"\"\n    Calculates the Restricted Candidate List (RCL).\n    Parameters:\n    - candidates: List of tuples (candidate index, contribution).\n    - alpha: Parameter to control the size of the RCL.\n    Returns:\n    - rcl: Restricted Candidate List.\n    \"\"\"\n    min_cost = candidates[0][1]",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "construct_grasp",
+        "kind": 2,
+        "importPath": "GRASP",
+        "description": "GRASP",
+        "peekOfCode": "def construct_grasp(matrix, alpha=0.1):\n    \"\"\"\n    Constructs a solution using the GRASP (Greedy Randomized Adaptive Search Procedure) heuristic.\n    Parameters:\n    - matrix: 2D array representing the cost matrix.\n    - alpha: Parameter to control the size of the RCL (default 0.1).\n    Returns:\n    - permutation: Constructed solution as a list of indices.\n    \"\"\"\n    permutation = []",
+        "detail": "GRASP",
+        "documentation": {}
+    },
+    {
+        "label": "becker_constructive_algorithm",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def becker_constructive_algorithm(matrix):\n    \"\"\"\n    Implements Becker's constructive heuristic for the Linear Ordering Problem.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    Returns:\n    - permutation: List of indices representing the order.\n    \"\"\"\n    n = matrix.shape[0]  # Number of rows/columns in the matrix\n    indices = list(range(n))  # List of all indices",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "interchange",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def interchange(permutation, i, j):\n    \"\"\"\n    Performs an interchange operation on a permutation.\n    Parameters:\n    - permutation: List of indices representing the current order.\n    - i: Index of the first element to swap.\n    - j: Index of the second element to swap.\n    Returns:\n    - new_permutation: A new list with the elements at i and j swapped.\n    \"\"\"",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "insert",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def insert(permutation, i, j):\n    \"\"\"\n    Performs an insert operation on a permutation.\n    Parameters:\n    - permutation: List of indices representing the current order.\n    - i: Index of the element to move.\n    - j: Index where the element should be inserted.\n    Returns:\n    - new_permutation: A new list with the element at index i inserted at index j.\n    \"\"\"",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "delta_insert",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def delta_insert(matrix, permutation, i, j):\n    \"\"\"\n    Computes the delta function for an insert operation on the permutation.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - permutation: Current permutation of indices.\n    - i: Index of the element to move.\n    - j: Index where the element is to be inserted.\n    Returns:\n    - delta: The change in the objective function value due to the insert operation.",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "delta_swap",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def delta_swap(matrix, permutation, i, j):\n    \"\"\"\n    Computes the delta function for a swap operation on the permutation.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - permutation: Current permutation of indices.\n    - i: Index of the first element to swap.\n    - j: Index of the second element to swap.\n    Returns:\n    - delta: The change in the objective function value due to the swap operation.",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "visit_CK",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def visit_CK(matrix, permutation, objective_function):\n    \"\"\"\n    Recursively sorts a permutation based on the defined criteria.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - permutation: List of indices representing the current order.\n    Returns:\n    - sorted_permutation: A new permutation that is sorted.\n    \"\"\"\n    if len(permutation) == 1:",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "visit_NI",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def visit_NI(matrix, permutation, objective_function):\n    \"\"\"\n    Implements the visit_NI visit neighbourhood function for the insertion neighborhood.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - permutation: List of indices representing the current order.\n    - objective_function: A function that computes the objective value for a given permutation.\n    Returns:\n    - new_permutation: A modified permutation if an improvement is found, otherwise the original permutation.\n    \"\"\"",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "visit_NS",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def visit_NS(matrix, permutation, objective_function):\n    \"\"\"\n    Implements the visit_NS visit neighbourhood function for the swap neighborhood.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - permutation: List of indices representing the current order.\n    - objective_function: A function that computes the objective value for a given permutation.\n    Returns:\n    - new_permutation: A modified permutation if an improvement is found, otherwise the original permutation.\n    \"\"\"",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "objective_function",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def objective_function(matrix, permutation):\n    \"\"\"\n    Computes the objective function value for a given permutation.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - permutation: List of indices representing the current order.\n    Returns:\n    - objective_value: The computed objective value for the permutation.\n    \"\"\"\n    objective_value = 0",
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
+        "label": "ILS",
+        "kind": 2,
+        "importPath": "ILS",
+        "description": "ILS",
+        "peekOfCode": "def ILS(\n    matrix,\n    objective_function,\n    constructive_heuristic,\n    visit_N,\n    max_iter=100,\n    debug=False,\n):\n    \"\"\"\n    Implements the Iterated Local Search (ILS) algorithm for the Linear Ordering Problem.",
+        "detail": "ILS",
+        "documentation": {}
+    }
+]
