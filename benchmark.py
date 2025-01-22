@@ -1,5 +1,6 @@
-from GRASP import construct_grasp
 from ILS import *
+from GRASP import construct_grasp
+from vizualization import plot_permutations_with_pca
 
 
 def benchmark_neighbourhood_instance(matrix, max_iter=100, debug=False):
@@ -117,6 +118,42 @@ def print_starting_solution_benchmark_statistics(results):
     print(
         f"Mean relative improvement of Random over Monotone: {mean_random_monotone*100:.2f}% ± {std_random_monotone*100:.2f}%"
     )
+
+
+def benchmark_visited_points(matrix, max_iter=100, debug=False):
+    """
+    Benchmarks the number of visited points using the Iterated Local Search (ILS) algorithm.
+    Args:
+        matrix (list of list of int): The input matrix representing the problem instance.
+        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.
+        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.
+    Returns:
+        list: A list of visited points during the ILS algorithm execution.
+    """
+    _, best_value, visited = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NI,
+        max_iter,
+        True,
+        False,
+    )
+
+    return visited
+
+
+def plot_permutations_with_pca_benchmark(results):
+    """
+    Plots the visited points during the ILS algorithm execution.
+    Args:
+        results (dict): A dict of filename and visited points.
+    """
+    for key, visited_points in results.items():
+        matrix = read_square_matrix_from_file(key, False)["matrix"]
+        obj_func = lambda x: objective_function(matrix, x)
+        plot_permutations_with_pca(visited_points, obj_func)
+        break
 
 
 def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):
@@ -245,7 +282,7 @@ def benchmark(
         "instances/" + file_name
         for file_name in os.listdir("instances")
         if file_name.endswith(".mat")
-    ]
+    ][:1]
 
     for file_name in tqdm(files, desc="Processing files"):
         try:
@@ -259,7 +296,8 @@ def benchmark(
     with open(filename, "w") as file:
         json.dump(results, file, indent=4, default=convert_to_native)
 
-    print_statistics(results)
+    if print_statistics:
+        print_statistics(results)
 
     return results
 
@@ -279,10 +317,17 @@ if __name__ == "__main__":
     #     max_iter=100,
     #     debug=False,
     # )
+    # benchmark(
+    #     "results_grasp_constructive.json",
+    #     benchmark_grasp_constructive,
+    #     print_grasp_constructive_benchmark_statistics,
+    #     max_iter=100,
+    #     debug=False,
+    # )
     benchmark(
-        "results_grasp_constructive.json",
-        benchmark_grasp_constructive,
-        print_grasp_constructive_benchmark_statistics,
-        max_iter=100,
+        "results_visited_points.json",
+        benchmark_visited_points,
+        plot_permutations_with_pca_benchmark,
+        max_iter=10,
         debug=False,
     )
