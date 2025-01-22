@@ -345,5 +345,68 @@
         "peekOfCode": "def ILS(\n    matrix,\n    objective_function,\n    constructive_heuristic,\n    visit_N,\n    max_iter=100,\n    debug=False,\n):\n    \"\"\"\n    Implements the Iterated Local Search (ILS) algorithm for the Linear Ordering Problem.",
         "detail": "ILS",
         "documentation": {}
+    },
+    {
+        "label": "insert",
+        "kind": 2,
+        "importPath": "TABU",
+        "description": "TABU",
+        "peekOfCode": "def insert(pi, i, j):\n    \"\"\"\n    Inserts the element at position i into position j in the permutation pi.\n    Parameters:\n    - pi: List representing the permutation.\n    - i: Index of the element to move.\n    - j: Target index for the element.\n    Returns:\n    - new_pi: Modified permutation with the element moved.\n    \"\"\"",
+        "detail": "TABU",
+        "documentation": {}
+    },
+    {
+        "label": "delta",
+        "kind": 2,
+        "importPath": "TABU",
+        "description": "TABU",
+        "peekOfCode": "def delta(matrix, pi, i, j):\n    \"\"\"\n    Computes the change in objective value for moving element i to position j.\n    Parameters:\n    - matrix: 2D list representing the cost matrix.\n    - pi: List representing the current permutation.\n    - i: Index of the element to move.\n    - j: Target index for the element.\n    Returns:\n    - delta: The calculated change in objective value.",
+        "detail": "TABU",
+        "documentation": {}
+    },
+    {
+        "label": "get_obj_value",
+        "kind": 2,
+        "importPath": "TABU",
+        "description": "TABU",
+        "peekOfCode": "def get_obj_value(matrix, pi):\n    \"\"\"\n    Computes the objective value of a given permutation.\n    Parameters:\n    - matrix: 2D list representing the cost matrix.\n    - pi: List representing the permutation.\n    Returns:\n    - obj_value: The calculated objective value.\n    \"\"\"\n    return sum(",
+        "detail": "TABU",
+        "documentation": {}
+    },
+    {
+        "label": "granularity_fine",
+        "kind": 2,
+        "importPath": "TABU",
+        "description": "TABU",
+        "peekOfCode": "def granularity_fine(i, j):\n    \"\"\"\n    Fine-grained granularity representation for tabu list.\n    Parameters:\n    - i: Index of the element being moved.\n    - j: Target index for the element.\n    Returns:\n    - Tuple (i, j): Fine granularity representation.\n    \"\"\"\n    return (i, j)",
+        "detail": "TABU",
+        "documentation": {}
+    },
+    {
+        "label": "granularity_coarse",
+        "kind": 2,
+        "importPath": "TABU",
+        "description": "TABU",
+        "peekOfCode": "def granularity_coarse(i, j):\n    \"\"\"\n    Coarse-grained granularity representation for tabu list.\n    Parameters:\n    - i: Index of the element being moved.\n    - j: Target index for the element.\n    Returns:\n    - i: Coarse granularity representation.\n    \"\"\"\n    return i",
+        "detail": "TABU",
+        "documentation": {}
+    },
+    {
+        "label": "tabu_iteration",
+        "kind": 2,
+        "importPath": "TABU",
+        "description": "TABU",
+        "peekOfCode": "def tabu_iteration(matrix, pi, tabu_list, granularity_func, tenure):\n    \"\"\"\n    Performs one iteration of the tabu search to find the best neighbor.\n    Parameters:\n    - matrix: 2D list representing the cost matrix.\n    - pi: List representing the current permutation.\n    - tabu_list: List of tabu moves.\n    - granularity_func: Function to determine tabu granularity.\n    - tenure: Maximum size of the tabu list.\n    Returns:",
+        "detail": "TABU",
+        "documentation": {}
+    },
+    {
+        "label": "tabu_search",
+        "kind": 2,
+        "importPath": "TABU",
+        "description": "TABU",
+        "peekOfCode": "def tabu_search(matrix, pi_init, tenure, n, granularity_func):\n    \"\"\"\n    Performs tabu search to optimize the objective function.\n    Parameters:\n    - matrix: 2D list representing the cost matrix.\n    - pi_init: Initial permutation.\n    - tenure: Maximum size of the tabu list.\n    - n: Number of iterations to perform.\n    - granularity_func: Function to determine tabu granularity.\n    Returns:",
+        "detail": "TABU",
+        "documentation": {}
     }
 ]
