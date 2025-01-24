@@ -451,6 +451,13 @@ if __name__ == "__main__":
         lambda x: plot_pairwise_diversity_cdf(x, folder="ILS", filename="NI"),
         debug=False,
     )
+    benchmark(
+        "results_neigh_diversity.json",
+        TABU,
+        benchmark_neighbourhood_diversity,
+        lambda x: plot_pairwise_diversity_cdf(x, folder="TABU", filename="NI"),
+        debug=False,
+    )
     # benchmark(
     #     "results_execution_time.json",
     #     benchmark_execution_time,
