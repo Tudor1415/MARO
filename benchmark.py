@@ -136,7 +136,7 @@ def benchmark_visited_points(matrix, max_iter=100, debug=False):
         matrix,
         objective_function,
         becker_constructive_algorithm,
-        visit_NI,
+        visit_NS,
         max_iter,
         True,
         False,
@@ -404,7 +404,7 @@ def benchmark(
         "instances/" + file_name
         for file_name in os.listdir("instances")
         if file_name.endswith(".mat")
-    ][:1]
+    ]
 
     for file_name in tqdm(files, desc="Processing files"):
         try:
@@ -415,7 +415,8 @@ def benchmark(
         except Exception as e:
             print(f"Error processing {file_name}: {e}")
 
-    with open(filename, "w") as file:
+    os.makedirs("results", exist_ok=True)
+    with open("results/" + filename, "w") as file:
         json.dump(results, file, indent=4, default=convert_to_native)
 
     if print_statistics:
@@ -446,13 +447,13 @@ if __name__ == "__main__":
     #     max_iter=100,
     #     debug=False,
     # )
-    # benchmark(
-    #     "results_visited_points.json",
-    #     benchmark_visited_points,
-    #     plot_permutations_with_pca_benchmark,
-    #     max_iter=50,
-    #     debug=False,
-    # )
+    benchmark(
+        "results_visited_points.json",
+        benchmark_visited_points,
+        plot_permutations_with_pca_benchmark,
+        max_iter=50,
+        debug=False,
+    )
     # benchmark(
     #     "results_score_evolution.json",
     #     benchmark_score_evolution,
@@ -467,9 +468,9 @@ if __name__ == "__main__":
     #     max_iter=50,
     #     debug=False,
     # )
-    benchmark(
-        "results_execution_time.json",
-        benchmark_execution_time,
-        print_execution_time_statistics,
-        max_iter=50,
-    )
+    # benchmark(
+    #     "results_execution_time.json",
+    #     benchmark_execution_time,
+    #     plot_execution_time_statistics,
+    #     max_iter=50,
+    # )

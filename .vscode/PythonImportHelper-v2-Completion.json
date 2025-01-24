@@ -510,7 +510,7 @@
         "kind": 2,
         "importPath": "vizualization",
         "description": "vizualization",
-        "peekOfCode": "def plot_permutations_with_pca(permutations_to_plot, objective_function):\n    \"\"\"\n    Function to plot permutations in 2D space using PCA.\n    The function:\n      - Generates 100 random permutations (blue, alpha=0.5).\n      - Projects the given permutations (red, alpha=1).\n      - Highlights the first point in orange and the last in yellow.\n      - Colors and sizes random permutations based on their objective function score.\n    Args:\n        permutations_to_plot (list of lists): List of permutations to plot in red.",
+        "peekOfCode": "def plot_permutations_with_pca(\n    permutations_to_plot, objective_function, filename=\"default\"\n):\n    \"\"\"\n    Function to plot permutations in 2D space using PCA.\n    The function:\n      - Generates 100 random permutations (blue, alpha=0.5).\n      - Projects the given permutations (red, alpha=1).\n      - Highlights the first point in orange and the last in yellow.\n      - Colors and sizes random permutations based on their objective function score.",
         "detail": "vizualization",
         "documentation": {}
     },
@@ -537,7 +537,7 @@
         "kind": 2,
         "importPath": "vizualization",
         "description": "vizualization",
-        "peekOfCode": "def plot_execution_time_statistics(results):\n    \"\"\"\n    Function to plot the execution time statistics.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of execution times startig with the matrix size.\n    \"\"\"\n    size_time_ni, size_time_ns = {}, {}\n    for key, values in results.items():\n        size_time_ni.setdefault(values[0], []).append(values[1])\n        size_time_ns.setdefault(values[0], []).append(values[2])",
+        "peekOfCode": "def plot_execution_time_statistics(results):\n    \"\"\"\n    Function to plot the execution time statistics.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of execution times starting with the matrix size.\n    \"\"\"\n    size_time_ni, size_time_ns = {}, {}\n    for key, values in results.items():\n        size_time_ni.setdefault(values[0], []).append(values[1])\n        size_time_ns.setdefault(values[0], []).append(values[2])",
         "detail": "vizualization",
         "documentation": {}
     }

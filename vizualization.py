@@ -1,9 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+import os
 
 
-def plot_permutations_with_pca(permutations_to_plot, objective_function):
+def plot_permutations_with_pca(
+    permutations_to_plot, objective_function, filename="default"
+):
     """
     Function to plot permutations in 2D space using PCA.
     The function:
@@ -39,10 +42,10 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
     # Compute scores for random permutations
     scores = np.array([objective_function(p) for p in random_permutations])
     normalized_scores = (scores - scores.min()) / (scores.max() - scores.min())
-    sizes = 50 + normalized_scores * 200  # Scale sizes for better visualization
+    sizes = 50 + normalized_scores * 200
 
     # Plot the results
-    plt.figure(figsize=(8, 6))
+    plt.figure(figsize=(11, 9))
 
     # Plot random permutations with color and size based on score
     f = 150
@@ -52,16 +55,15 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
         c=plt.cm.Reds(normalized_scores[::f]),
         alpha=normalized_scores[::f],
         s=sizes[::f],
-        label="Random Permutations",
     )
 
-    # Plot specific permutations in red
+    # Plot visited permutations in blue with size based on score
     plt.scatter(
         specific_pca[:, 0],
         specific_pca[:, 1],
         c="blue",
         alpha=1,
-        label="Visited Permutations",
+        s=50,
     )
 
     # Highlight the first point in orange and the last in yellow
@@ -70,7 +72,6 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
         specific_pca[0, 1],
         c="orange",
         alpha=1,
-        label="Starting point",
         edgecolor="k",
         s=100,
     )
@@ -79,17 +80,25 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
         specific_pca[-1, 1],
         c="yellow",
         alpha=1,
-        label="End point",
         edgecolor="k",
         s=100,
     )
 
-    # Add labels and legend
-    plt.xlabel(f"PC 1 ({pca.explained_variance_ratio_[0]*100:.1f}% var)")
-    plt.ylabel(f"PC 2 ({pca.explained_variance_ratio_[1]*100:.1f}% var)")
-    plt.title("PCA of Permutations with Score-based Color and Size Mapping")
-    plt.grid(True)
-    plt.legend()
+    # Save the plot without legend
+    os.makedirs("plots/visited_permutations", exist_ok=True)
+    plt.savefig(f"plots/visited_permutations/{filename}.pdf")
+    plt.show()
+
+    # Create a separate plot for the legend
+    fig_legend = plt.figure(figsize=(12, 1))
+    ax = fig_legend.add_subplot(111)
+    ax.plot([], [], "o", color="red", label="Random Permutations")
+    ax.plot([], [], "o", color="blue", label="Visited Permutations")
+    ax.plot([], [], "o", color="orange", label="Starting point")
+    ax.plot([], [], "o", color="yellow", label="End point")
+    ax.legend(loc="center", ncol=4, fontsize=12)
+    ax.axis("off")
+    plt.savefig(f"plots/visited_permutations/{filename}_legend.pdf")
     plt.show()
 
 
@@ -135,7 +144,7 @@ def plot_execution_time_statistics(results):
     Function to plot the execution time statistics.
 
     Args:
-        results (dict of list of floats): Dict linking instance name to list of execution times startig with the matrix size.
+        results (dict of list of floats): Dict linking instance name to list of execution times starting with the matrix size.
     """
     size_time_ni, size_time_ns = {}, {}
     for key, values in results.items():
@@ -145,14 +154,37 @@ def plot_execution_time_statistics(results):
     sizes = sorted(size_time_ni.keys())
     ni_means = [np.mean(size_time_ni[size]) for size in sizes]
     ns_means = [np.mean(size_time_ns[size]) for size in sizes]
+    ni_stds = [np.std(size_time_ni[size]) for size in sizes]
+    ns_stds = [np.std(size_time_ns[size]) for size in sizes]
 
-    print(sizes)
     plt.figure(figsize=(10, 6))
-    plt.plot(sizes, ni_means, marker="o", color="b", label="NI Execution Time")
-    plt.plot(sizes, ns_means, marker="o", color="r", label="NS Execution Time")
-    plt.xlabel("Matrix Size")
-    plt.ylabel("Execution Time (s)")
-    plt.title("Execution Time Statistics")
+    plt.errorbar(
+        sizes,
+        ni_means,
+        yerr=ni_stds,
+        marker="o",
+        color="b",
+        label="NI Execution Time",
+        capsize=5,
+    )
+    plt.errorbar(
+        sizes,
+        ns_means,
+        yerr=ns_stds,
+        marker="o",
+        color="r",
+        label="NS Execution Time",
+        capsize=5,
+    )
+    plt.xlabel("Matrix Size", fontsize=25)
+    plt.ylabel("Execution Time (s)", fontsize=25)
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+    plt.title("Execution Time", fontsize=30)
     plt.grid(True)
-    plt.legend()
+    plt.legend(fontsize=22)
+
+    # Create directory if it doesn't exist
+    os.makedirs("plots/exec_times", exist_ok=True)
+    plt.savefig("plots/exec_times/execution_time_statistics.pdf")
     plt.show()
