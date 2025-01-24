@@ -89,7 +89,7 @@ def plot_permutations_with_pca(
 
     # Save the plot without legend
     os.makedirs(f"plots/visited_permutations/{folder}", exist_ok=True)
-    plt.savefig(f"plots/visited_permutations/{filename}.pdf")
+    plt.savefig(f"plots/visited_permutations/{folder}/{filename}.pdf")
     plt.show()
 
     # Create a separate plot for the legend
