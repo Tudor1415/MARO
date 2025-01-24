@@ -536,7 +536,7 @@
         "kind": 2,
         "importPath": "vizualization",
         "description": "vizualization",
-        "peekOfCode": "def plot_pairwise_diversity_cdf(results):\n    \"\"\"\n    Function to plot the CDF of pairwise diversity over iterations.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.\n    \"\"\"\n    for key, values in results.items():\n        plt.figure(figsize=(10, 6))\n        sorted_values = np.sort(values)\n        cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)",
+        "peekOfCode": "def plot_pairwise_diversity_cdf(results):\n    \"\"\"\n    Function to plot the CDF of pairwise diversity over iterations.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.\n    \"\"\"\n    all_values = []\n    for key, values in results.items():\n        all_values.extend(values)\n    plt.figure(figsize=(10, 6))",
         "detail": "vizualization",
         "documentation": {}
     },

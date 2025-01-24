@@ -374,7 +374,7 @@ if __name__ == "__main__":
         perturb_random,
         visit_NS,
         10,
-        log_visits=False,
+        log_visits=True,
         debug=False,
     )
     benchmark(
@@ -382,7 +382,6 @@ if __name__ == "__main__":
         ILS_NS_10_40,
         benchmark_neighbourhood_diversity,
         plot_pairwise_diversity_cdf,
-        max_iter=50,
         debug=False,
     )
     # benchmark(

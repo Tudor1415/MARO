@@ -130,16 +130,19 @@ def plot_pairwise_diversity_cdf(results):
     Args:
         results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.
     """
+    all_values = []
     for key, values in results.items():
-        plt.figure(figsize=(10, 6))
-        sorted_values = np.sort(values)
-        cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
-        plt.plot(sorted_values, cdf, linestyle="-", color="b", alpha=0.7)
-        plt.xlabel("Pairwise Diversity")
-        plt.ylabel("CDF")
-        plt.title("Pairwise Diversity CDF for {}".format(key))
-        plt.grid(True)
-        plt.show()
+        all_values.extend(values)
+
+    plt.figure(figsize=(10, 6))
+    sorted_values = np.sort(all_values)
+    cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
+    plt.plot(sorted_values, cdf, linestyle="-", color="b", alpha=0.7)
+    plt.xlabel("Pairwise Diversity")
+    plt.ylabel("CDF")
+    plt.title("Pairwise Diversity CDF for {}".format(key))
+    plt.grid(True)
+    plt.show()
 
 
 def plot_execution_time_statistics(results):
