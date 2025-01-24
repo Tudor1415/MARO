@@ -367,21 +367,39 @@ if __name__ == "__main__":
     #     debug=False,
     # )
 
-    ILS_NS_10_40 = lambda x: ILS(
+    # ILS_NS_10_40 = lambda x: ILS(
+    #     x,
+    #     objective_function,
+    #     becker_constructive_algorithm,
+    #     perturb_random,
+    #     visit_NS,
+    #     10,
+    #     log_visits=True,
+    #     debug=False,
+    # )
+    # benchmark(
+    #     "results_neigh_diversity.json",
+    #     ILS_NS_10_40,
+    #     benchmark_neighbourhood_diversity,
+    #     plot_pairwise_diversity_cdf,
+    #     debug=False,
+    # )
+
+    ILS_NI_10_40 = lambda x: ILS(
         x,
         objective_function,
         becker_constructive_algorithm,
         perturb_random,
-        visit_NS,
+        visit_NI,
         10,
         log_visits=True,
         debug=False,
     )
     benchmark(
         "results_neigh_diversity.json",
-        ILS_NS_10_40,
+        ILS_NI_10_40,
         benchmark_neighbourhood_diversity,
-        plot_pairwise_diversity_cdf,
+        lambda x: plot_pairwise_diversity_cdf(x, folder="ILS", filename="NI"),
         debug=False,
     )
     # benchmark(

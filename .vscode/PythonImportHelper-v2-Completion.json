@@ -536,7 +536,7 @@
         "kind": 2,
         "importPath": "vizualization",
         "description": "vizualization",
-        "peekOfCode": "def plot_pairwise_diversity_cdf(results):\n    \"\"\"\n    Function to plot the CDF of pairwise diversity over iterations.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.\n    \"\"\"\n    all_values = []\n    for key, values in results.items():\n        all_values.extend(values)\n    plt.figure(figsize=(10, 6))",
+        "peekOfCode": "def plot_pairwise_diversity_cdf(results, folder=\"default\", filename=\"default\"):\n    \"\"\"\n    Function to plot the CDF of pairwise diversity over iterations.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.\n    \"\"\"\n    all_values = set()\n    for key, values in results.items():\n        for value in values:\n            all_values.add(value)",
         "detail": "vizualization",
         "documentation": {}
     },
@@ -545,7 +545,7 @@
         "kind": 2,
         "importPath": "vizualization",
         "description": "vizualization",
-        "peekOfCode": "def plot_execution_time_statistics(results):\n    \"\"\"\n    Function to plot the execution time statistics.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of execution times starting with the matrix size.\n    \"\"\"\n    size_time_ni, size_time_ns = {}, {}\n    for key, values in results.items():\n        size_time_ni.setdefault(values[0], []).append(values[1])\n        size_time_ns.setdefault(values[0], []).append(values[2])",
+        "peekOfCode": "def plot_execution_time_statistics(results):\n    \"\"\"\n    Function to plot the execution time statistics.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of execution times starting with the matrix size.\n    \"\"\"\n    size_time_ni, size_time_ns = {}, {}\n    for key, values in results.items():\n        size_time_ni.setdefault(values[0], []).append(values[1][0])\n        size_time_ns.setdefault(values[0], []).append(values[1][1])",
         "detail": "vizualization",
         "documentation": {}
     }
