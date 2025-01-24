@@ -176,7 +176,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def plot_permutations_with_pca_benchmark(results, folder=\"default\"):\n    \"\"\"\n    Plots the visited points during the ILS algorithm execution.\n    Args:\n        results (dict): A dict of filename and visited points.\n    \"\"\"\n    for key, visited_points in results.items():\n        matrix = read_square_matrix_from_file(key, False)[\"matrix\"]\n        obj_func = lambda x: objective_function(matrix, x)\n        plot_permutations_with_pca(",
+        "peekOfCode": "def plot_permutations_with_pca_benchmark(results, folder=\"default\"):\n    \"\"\"\n    Plots the visited points during the ILS algorithm execution.\n    Args:\n        results (dict): A dict of filename and visited points.\n    \"\"\"\n    for key, visited_points in results.items():\n        matrix = read_square_matrix_from_file(key, False)[\"matrix\"]\n        obj_func = lambda x: objective_function(matrix, x)\n        filename = key.split(\"/\")[-1].split(\".\")[0]",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -194,7 +194,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):\n    \"\"\"\n    Runs the ILS algorithm and computes the pairwise kendall tau distance between the permutations.\n    Parameters:\n        matrix (np.array): The cost matrix.\n        max_iter (int): The maximum number of iterations for the ILS algorithm.\n        debug (bool): Flag to enable/disable debugging. Default is False.\n    Returns:\n        cummulative distribution of the pairwise kendall tau distance.\n    \"\"\"",
+        "peekOfCode": "def benchmark_neighbourhood_diversity(matrix, search_function, debug=False):\n    \"\"\"\n    Runs the ILS algorithm and computes the pairwise kendall tau distance between the permutations.\n    Parameters:\n        matrix (np.array): The cost matrix.\n        search_function (callable): The search function to use.\n        debug (bool): Flag to enable/disable debugging. Default is False.\n    Returns:\n        cummulative distribution of the pairwise kendall tau distance.\n    \"\"\"",
         "detail": "benchmark",
         "documentation": {}
     },

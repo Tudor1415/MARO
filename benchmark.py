@@ -159,8 +159,9 @@ def plot_permutations_with_pca_benchmark(results, folder="default"):
     for key, visited_points in results.items():
         matrix = read_square_matrix_from_file(key, False)["matrix"]
         obj_func = lambda x: objective_function(matrix, x)
+        filename = key.split("/")[-1].split(".")[0]
         plot_permutations_with_pca(
-            visited_points, obj_func, folder=folder, filename=key
+            visited_points, obj_func, folder=folder, filename=filename
         )
 
 
@@ -192,26 +193,17 @@ def benchmark_score_evolution(matrix, max_iter=100, debug=False):
     return [objective_function(matrix, permutation) for permutation in visited]
 
 
-def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):
+def benchmark_neighbourhood_diversity(matrix, search_function, debug=False):
     """
     Runs the ILS algorithm and computes the pairwise kendall tau distance between the permutations.
     Parameters:
         matrix (np.array): The cost matrix.
-        max_iter (int): The maximum number of iterations for the ILS algorithm.
+        search_function (callable): The search function to use.
         debug (bool): Flag to enable/disable debugging. Default is False.
     Returns:
         cummulative distribution of the pairwise kendall tau distance.
     """
-    _, _, visited = ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NI,
-        max_iter,
-        log_visits=True,
-        debug=False,
-    )
+    _, _, visited = search_function(matrix)
     if debug:
         print(f"Visited points: {visited}")
 
