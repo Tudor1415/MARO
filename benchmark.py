@@ -2,6 +2,7 @@ from ILS import *
 from GRASP import construct_grasp
 from vizualization import *
 from scipy import stats
+import timeit
 
 
 def benchmark_neighbourhood_instance(matrix, max_iter=100, debug=False):
@@ -217,6 +218,60 @@ def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):
     return distances
 
 
+def benchmark_execution_time(matrix, max_iter=100, debug=False):
+    """
+    Runs the ILS algorithm and benchmarks its performance in terms of computational time.
+    """
+    start_time_NI = timeit.default_timer()
+    _, best_value_NI = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NI,
+        max_iter,
+        False,
+        debug,
+    )
+    end_time_NI = timeit.default_timer()
+
+    start_time_NS = timeit.default_timer()
+    _, best_value_NS = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NS,
+        max_iter,
+        False,
+        debug,
+    )
+    end_time_NS = timeit.default_timer()
+
+    execution_time_NI = (end_time_NI - start_time_NI) / 5
+    execution_time_NS = (end_time_NS - start_time_NS) / 5
+
+    if debug:
+        print(f"Execution time NI: {execution_time_NI:.2f} seconds")
+        print(f"Execution time NS: {execution_time_NS:.2f} seconds")
+
+    return execution_time_NI, execution_time_NS
+
+
+def print_execution_time_statistics(results):
+    """
+    Prints the results of the execution time benchmark.
+    """
+    times_NI = [value[0] for key, value in results.items()]
+    times_NS = [value[1] for key, value in results.items()]
+
+    print("Statistics:")
+    print(
+        f"Execution time N_I: {np.mean(times_NI):.2f} ± {np.std(times_NI):.2f} seconds"
+    )
+    print(
+        f"Execution time N_S: {np.mean(times_NS):.2f} ± {np.std(times_NS):.2f} seconds"
+    )
+
+
 def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):
     """
     Runs the ILS algorithm with GRASP constructive heuristic with different alphas and benchmarks its performance.
@@ -399,10 +454,16 @@ if __name__ == "__main__":
     #     max_iter=50,
     #     debug=False,
     # )
+    # benchmark(
+    #     "results_neigh_diversity.json",
+    #     benchmark_neighbourhood_diversity,
+    #     plot_pairwise_diversity_cdf,
+    #     max_iter=50,
+    #     debug=False,
+    # )
     benchmark(
-        "results_neigh_diversity.json",
-        benchmark_neighbourhood_diversity,
-        plot_pairwise_diversity_cdf,
+        "results_execution_time.json",
+        benchmark_execution_time,
+        print_execution_time_statistics,
         max_iter=50,
-        debug=False,
     )
