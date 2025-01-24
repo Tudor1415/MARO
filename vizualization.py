@@ -5,7 +5,10 @@ import os
 
 
 def plot_permutations_with_pca(
-    permutations_to_plot, objective_function, filename="default"
+    permutations_to_plot,
+    objective_function,
+    filename="default",
+    folder="default",
 ):
     """
     Function to plot permutations in 2D space using PCA.
@@ -85,7 +88,7 @@ def plot_permutations_with_pca(
     )
 
     # Save the plot without legend
-    os.makedirs("plots/visited_permutations", exist_ok=True)
+    os.makedirs(f"plots/visited_permutations/{folder}", exist_ok=True)
     plt.savefig(f"plots/visited_permutations/{filename}.pdf")
     plt.show()
 

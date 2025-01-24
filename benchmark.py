@@ -19,17 +19,19 @@ def benchmark_neighbourhood_instance(matrix, max_iter=100, debug=False):
         matrix,
         objective_function,
         becker_constructive_algorithm,
+        perturb_random,
         visit_NI,
         max_iter,
-        debug,
+        debug=debug,
     )
     _, best_value_NS = ILS(
         matrix,
         objective_function,
         becker_constructive_algorithm,
+        perturb_random,
         visit_NS,
         max_iter,
-        debug,
+        debug=debug,
     )
 
     if debug:
@@ -71,9 +73,10 @@ def benchmark_starting_solution_instance(
             matrix,
             objective_function,
             lambda x: random_permutation,
+            perturb_random,
             visit_NI,
-            max_iter,
-            debug,
+            max_iter=max_iter,
+            debug=debug,
         )
         random_score_values.append(best_value_random)
 
@@ -84,9 +87,10 @@ def benchmark_starting_solution_instance(
         matrix,
         objective_function,
         becker_constructive_algorithm,
+        perturb_random,
         visit_NI,
-        max_iter,
-        debug,
+        max_iter=max_iter,
+        debug=debug,
     )
 
     if debug:
@@ -136,16 +140,17 @@ def benchmark_visited_points(matrix, max_iter=100, debug=False):
         matrix,
         objective_function,
         becker_constructive_algorithm,
+        perturb_random,
         visit_NI,
         max_iter,
-        True,
-        False,
+        log_visits=True,
+        debug=debug,
     )
 
     return visited
 
 
-def plot_permutations_with_pca_benchmark(results):
+def plot_permutations_with_pca_benchmark(results, folder="default"):
     """
     Plots the visited points during the ILS algorithm execution.
     Args:
@@ -154,7 +159,7 @@ def plot_permutations_with_pca_benchmark(results):
     for key, visited_points in results.items():
         matrix = read_square_matrix_from_file(key, False)["matrix"]
         obj_func = lambda x: objective_function(matrix, x)
-        plot_permutations_with_pca(visited_points, obj_func)
+        plot_permutations_with_pca(visited_points, obj_func, folder=folder)
         break
 
 
@@ -172,6 +177,7 @@ def benchmark_score_evolution(matrix, max_iter=100, debug=False):
         matrix,
         objective_function,
         becker_constructive_algorithm,
+        perturb_random,
         visit_NI,
         max_iter,
         True,
@@ -199,10 +205,11 @@ def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):
         matrix,
         objective_function,
         becker_constructive_algorithm,
+        perturb_random,
         visit_NI,
         max_iter,
-        True,
-        False,
+        log_visits=True,
+        debug=False,
     )
     if debug:
         print(f"Visited points: {visited}")
@@ -227,6 +234,7 @@ def benchmark_execution_time(matrix, max_iter=100, debug=False):
         matrix,
         objective_function,
         becker_constructive_algorithm,
+        perturb_random,
         visit_NI,
         max_iter,
         False,
@@ -239,6 +247,7 @@ def benchmark_execution_time(matrix, max_iter=100, debug=False):
         matrix,
         objective_function,
         becker_constructive_algorithm,
+        perturb_random,
         visit_NS,
         max_iter,
         False,
@@ -451,7 +460,7 @@ if __name__ == "__main__":
         "results_visited_points.json",
         benchmark_visited_points,
         plot_permutations_with_pca_benchmark,
-        max_iter=50,
+        max_iter=10,
         debug=False,
     )
     # benchmark(
