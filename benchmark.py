@@ -1,5 +1,6 @@
 from ILS import *
 from GRASP import construct_grasp
+from TABU import *
 from vizualization import *
 from scipy import stats
 import timeit
@@ -395,6 +396,14 @@ if __name__ == "__main__":
         log_visits=True,
         debug=False,
     )
+    TABU = lambda x: tabu_search(
+        x,
+        pi_init=False,
+        tenure=False,
+        iter=50,
+        log_visits=True
+    )
+
     benchmark(
         "results_neigh_diversity.json",
         ILS_NI_10_40,
