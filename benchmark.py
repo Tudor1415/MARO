@@ -159,8 +159,9 @@ def plot_permutations_with_pca_benchmark(results, folder="default"):
     for key, visited_points in results.items():
         matrix = read_square_matrix_from_file(key, False)["matrix"]
         obj_func = lambda x: objective_function(matrix, x)
-        plot_permutations_with_pca(visited_points, obj_func, folder=folder)
-        break
+        plot_permutations_with_pca(
+            visited_points, obj_func, folder=folder, filename=key
+        )
 
 
 def benchmark_score_evolution(matrix, max_iter=100, debug=False):
@@ -225,44 +226,29 @@ def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):
     return distances
 
 
-def benchmark_execution_time(matrix, max_iter=100, debug=False):
+def benchmark_execution_time(matrix, search_functions, debug=False):
     """
     Runs the ILS algorithm and benchmarks its performance in terms of computational time.
+    Arguments:
+        matrix (np.array): The cost matrix.
+        max_iter (int): The maximum number of iterations for the ILS algorithm.
+        debug (bool): Flag to enable/disable debugging. Default is False.
     """
-    start_time_NI = timeit.default_timer()
-    _, best_value_NI = ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NI,
-        max_iter,
-        False,
-        debug,
-    )
-    end_time_NI = timeit.default_timer()
+    start_times, end_times = [], []
+    for search_function in search_functions:
+        start_time = timeit.default_timer()
+        _, best_value = search_function
+        end_time = timeit.default_timer()
+        start_times.append(start_time)
+        end_times.append(end_time)
 
-    start_time_NS = timeit.default_timer()
-    _, best_value_NS = ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NS,
-        max_iter,
-        False,
-        debug,
-    )
-    end_time_NS = timeit.default_timer()
-
-    execution_time_NI = (end_time_NI - start_time_NI) / 5
-    execution_time_NS = (end_time_NS - start_time_NS) / 5
+    execution_times = np.array(end_times) - np.array(start_times)
 
     if debug:
-        print(f"Execution time NI: {execution_time_NI:.2f} seconds")
-        print(f"Execution time NS: {execution_time_NS:.2f} seconds")
+        for i, search_function in enumerate(search_functions):
+            print(f"Execution time: {execution_times[i]:.2f} seconds")
 
-    return len(matrix), execution_time_NI, execution_time_NS
+    return len(matrix), execution_times
 
 
 def print_execution_time_statistics(results):
@@ -459,7 +445,7 @@ if __name__ == "__main__":
     benchmark(
         "results_visited_points.json",
         benchmark_visited_points,
-        plot_permutations_with_pca_benchmark,
+        lambda x: plot_permutations_with_pca_benchmark(x, "ILS"),
         max_iter=10,
         debug=False,
     )
@@ -482,4 +468,15 @@ if __name__ == "__main__":
     #     benchmark_execution_time,
     #     plot_execution_time_statistics,
     #     max_iter=50,
+    # )
+
+    # _, best_value_NS = ILS(
+    #     matrix,
+    #     objective_function,
+    #     becker_constructive_algorithm,
+    #     perturb_random,
+    #     visit_NS,
+    #     max_iter,
+    #     False,
+    #     debug,
     # )

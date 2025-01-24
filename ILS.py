@@ -305,20 +305,23 @@ def LS(
         return current_permutation, best_value
 
 
-def perturb_random(permutation):
+def perturb_random(permutation, percentage=1):
     """
     Perturbs a permutation by removing half of the permutation and replacing it with a random permutation.
 
     Parameters:
     - permutation: List of indices representing the current order.
+    - percentage: Percentage of the permutation to shuffle.
     - k: Number of random swap operations to perform.
 
     Returns:
     - perturbed_permutation: A new permutation that has been perturbed.
     """
     n = len(permutation)
+    to_shuffle = int(percentage * n)
     indices = list(range(n))
-    perturbed_permutation = np.random.shuffle(indices)
+    np.random.shuffle(indices)
+    perturbed_permutation = permutation[:to_shuffle] + indices[to_shuffle:]
     return perturbed_permutation
 
 
