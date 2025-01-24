@@ -136,7 +136,7 @@ def benchmark_visited_points(matrix, max_iter=100, debug=False):
         matrix,
         objective_function,
         becker_constructive_algorithm,
-        visit_NS,
+        visit_NI,
         max_iter,
         True,
         False,
