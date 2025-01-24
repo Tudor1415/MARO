@@ -374,8 +374,8 @@ if __name__ == "__main__":
         perturb_random,
         visit_NS,
         10,
-        False,
-        False,
+        log_visits=False,
+        debug=False,
     )
     benchmark(
         "results_neigh_diversity.json",
