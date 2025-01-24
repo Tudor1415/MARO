@@ -5,34 +5,18 @@ from scipy import stats
 import timeit
 
 
-def benchmark_neighbourhood_instance(matrix, max_iter=100, debug=False):
+def benchmark_neighbourhood_instance(matrix, search_function, debug=False):
     """
     Runs the ILS algorithm and benchmarks its performance.
 
     Parameters:
     - matrix: 2D numpy array representing the cost matrix (n x n).
-    - max_iter: Maximum number of iterations for each ILS run.
+    - search_function: The search function to use.
     - debug: Boolean flag to enable/disable debugging statements.
     """
 
-    _, best_value_NI = ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NI,
-        max_iter,
-        debug=debug,
-    )
-    _, best_value_NS = ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NS,
-        max_iter,
-        debug=debug,
-    )
+    _, best_value_NI = search_function(matrix, visit_NI)
+    _, best_value_NS = search_function(matrix, visit_NS)
 
     if debug:
         print(f"Best value NI = {max(best_value_NI)}, NS = {max(best_value_NS)}")
@@ -55,7 +39,7 @@ def print_neighbourhood_benchmark_statistics(results):
 
 
 def benchmark_starting_solution_instance(
-    matrix, max_iter=100, nb_repetitions=10, debug=False
+    matrix, search_function, nb_repetitions=10, debug=False
 ):
     """
     Runs the ILS algorithm with different starting solutions and benchmarks its performance.
@@ -69,29 +53,14 @@ def benchmark_starting_solution_instance(
     # Random permutation
     for _ in range(nb_repetitions):
         random_permutation = np.random.permutation(n).tolist()
-        _, best_value_random = ILS(
-            matrix,
-            objective_function,
-            lambda x: random_permutation,
-            perturb_random,
-            visit_NI,
-            max_iter=max_iter,
-            debug=debug,
-        )
+        search_function(matrix, lambda x: random_permutation)
+        _, best_value_random = search_function(matrix, lambda x: random_permutation)
         random_score_values.append(best_value_random)
 
     mean_random_score = np.mean(random_score_values)
 
     # Becker's constructive heuristic
-    _, best_value_becker = ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NI,
-        max_iter=max_iter,
-        debug=debug,
-    )
+    _, best_value_becker = search_function(matrix, becker_constructive_algorithm)
 
     if debug:
         print(f"Best value Random = {mean_random_score}")
@@ -126,26 +95,17 @@ def print_starting_solution_benchmark_statistics(results):
     )
 
 
-def benchmark_visited_points(matrix, max_iter=100, debug=False):
+def benchmark_visited_points(matrix, search_function, debug=False):
     """
     Benchmarks the number of visited points using the Iterated Local Search (ILS) algorithm.
     Args:
         matrix (list of list of int): The input matrix representing the problem instance.
-        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.
+        search_function (callable): The search function to use.
         debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.
     Returns:
         list: A list of visited points during the ILS algorithm execution.
     """
-    _, best_value, visited = ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NI,
-        max_iter,
-        log_visits=True,
-        debug=debug,
-    )
+    _, best_value, visited = search_function(matrix)
 
     return visited
 
@@ -165,26 +125,17 @@ def plot_permutations_with_pca_benchmark(results, folder="default"):
         )
 
 
-def benchmark_score_evolution(matrix, max_iter=100, debug=False):
+def benchmark_score_evolution(matrix, search_function, debug=False):
     """
     Benchmarks the score evolution using the Iterated Local Search (ILS) algorithm.
     Args:
         matrix (list of list of int): The input matrix representing the problem instance.
-        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.
+        search_function (callable): The search function to use.
         debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.
     Returns:
         list: A list of visited points during the ILS algorithm execution.
     """
-    _, best_value, visited = ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NI,
-        max_iter,
-        True,
-        False,
-    )
+    _, best_value, visited = search_function(matrix)
 
     if debug:
         print(f"Best value = {best_value}")

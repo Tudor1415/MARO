@@ -131,7 +131,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def benchmark_neighbourhood_instance(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Runs the ILS algorithm and benchmarks its performance.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - max_iter: Maximum number of iterations for each ILS run.\n    - debug: Boolean flag to enable/disable debugging statements.\n    \"\"\"\n    _, best_value_NI = ILS(\n        matrix,",
+        "peekOfCode": "def benchmark_neighbourhood_instance(matrix, search_function, debug=False):\n    \"\"\"\n    Runs the ILS algorithm and benchmarks its performance.\n    Parameters:\n    - matrix: 2D numpy array representing the cost matrix (n x n).\n    - search_function: The search function to use.\n    - debug: Boolean flag to enable/disable debugging statements.\n    \"\"\"\n    _, best_value_NI = search_function(matrix, visit_NI)\n    _, best_value_NS = search_function(matrix, visit_NS)",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -149,7 +149,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def benchmark_starting_solution_instance(\n    matrix, max_iter=100, nb_repetitions=10, debug=False\n):\n    \"\"\"\n    Runs the ILS algorithm with different starting solutions and benchmarks its performance.\n    Starting solutions are generated using:\n        - a random permutation\n        - Becker's constructive heuristic\n    \"\"\"\n    n = matrix.shape[0]",
+        "peekOfCode": "def benchmark_starting_solution_instance(\n    matrix, search_function, nb_repetitions=10, debug=False\n):\n    \"\"\"\n    Runs the ILS algorithm with different starting solutions and benchmarks its performance.\n    Starting solutions are generated using:\n        - a random permutation\n        - Becker's constructive heuristic\n    \"\"\"\n    n = matrix.shape[0]",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -167,7 +167,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def benchmark_visited_points(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Benchmarks the number of visited points using the Iterated Local Search (ILS) algorithm.\n    Args:\n        matrix (list of list of int): The input matrix representing the problem instance.\n        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.\n        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.\n    Returns:\n        list: A list of visited points during the ILS algorithm execution.\n    \"\"\"",
+        "peekOfCode": "def benchmark_visited_points(matrix, search_function, debug=False):\n    \"\"\"\n    Benchmarks the number of visited points using the Iterated Local Search (ILS) algorithm.\n    Args:\n        matrix (list of list of int): The input matrix representing the problem instance.\n        search_function (callable): The search function to use.\n        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.\n    Returns:\n        list: A list of visited points during the ILS algorithm execution.\n    \"\"\"",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -185,7 +185,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def benchmark_score_evolution(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Benchmarks the score evolution using the Iterated Local Search (ILS) algorithm.\n    Args:\n        matrix (list of list of int): The input matrix representing the problem instance.\n        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.\n        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.\n    Returns:\n        list: A list of visited points during the ILS algorithm execution.\n    \"\"\"",
+        "peekOfCode": "def benchmark_score_evolution(matrix, search_function, debug=False):\n    \"\"\"\n    Benchmarks the score evolution using the Iterated Local Search (ILS) algorithm.\n    Args:\n        matrix (list of list of int): The input matrix representing the problem instance.\n        search_function (callable): The search function to use.\n        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.\n    Returns:\n        list: A list of visited points during the ILS algorithm execution.\n    \"\"\"",
         "detail": "benchmark",
         "documentation": {}
     },
