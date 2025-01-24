@@ -256,6 +256,28 @@ def benchmark_execution_time(matrix, max_iter=100, debug=False):
     return len(matrix), execution_time_NI, execution_time_NS
 
 
+def print_execution_time_statistics(results):
+    """
+    Prints the execution time statistics.
+    """
+    size_time_ni, size_time_ns = {}, {}
+    for key, values in results.items():
+        size_time_ni.setdefault(values[0], []).append(values[1])
+        size_time_ns.setdefault(values[0], []).append(values[2])
+
+    sizes = sorted(size_time_ni.keys())
+    ni_means = [np.mean(size_time_ni[size]) for size in sizes]
+    ni_vars = [np.var(size_time_ni[size]) for size in sizes]
+
+    ns_means = [np.mean(size_time_ns[size]) for size in sizes]
+    ns_vars = [np.var(size_time_ns[size]) for size in sizes]
+
+    for size in sizes:
+        print(
+            f"Size: {size}, NI: {np.mean(size_time_ni[size]):.2f} ± {np.var(size_time_ns[size]):.2f}, , NS: {np.mean(size_time_ns[size]):.2f} ± {np.var(size_time_ni[size]):.2f}"
+        )
+
+
 def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):
     """
     Runs the ILS algorithm with GRASP constructive heuristic with different alphas and benchmarks its performance.
@@ -438,16 +460,16 @@ if __name__ == "__main__":
     #     max_iter=50,
     #     debug=False,
     # )
-    benchmark(
-        "results_neigh_diversity.json",
-        benchmark_neighbourhood_diversity,
-        plot_pairwise_diversity_cdf,
-        max_iter=50,
-        debug=False,
-    )
     # benchmark(
-    #     "results_execution_time.json",
-    #     benchmark_execution_time,
-    #     print_execution_time_statistics,
+    #     "results_neigh_diversity.json",
+    #     benchmark_neighbourhood_diversity,
+    #     plot_pairwise_diversity_cdf,
     #     max_iter=50,
+    #     debug=False,
     # )
+    benchmark(
+        "results_execution_time.json",
+        benchmark_execution_time,
+        print_execution_time_statistics,
+        max_iter=50,
+    )

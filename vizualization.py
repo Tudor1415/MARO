@@ -137,10 +137,22 @@ def plot_execution_time_statistics(results):
     Args:
         results (dict of list of floats): Dict linking instance name to list of execution times startig with the matrix size.
     """
+    size_time_ni, size_time_ns = {}, {}
     for key, values in results.items():
-        plt.figure(figsize=(10, 6))
-        plt.boxplot(values, vert=False)
-        plt.xlabel("Execution Time (s)")
-        plt.title("Execution Time Statistics for {}".format(key))
-        plt.grid(True)
-        plt.show()
+        size_time_ni.setdefault(values[0], []).append(values[1])
+        size_time_ns.setdefault(values[0], []).append(values[2])
+
+    sizes = sorted(size_time_ni.keys())
+    ni_means = [np.mean(size_time_ni[size]) for size in sizes]
+    ns_means = [np.mean(size_time_ns[size]) for size in sizes]
+
+    print(sizes)
+    plt.figure(figsize=(10, 6))
+    plt.plot(sizes, ni_means, marker="o", color="b", label="NI Execution Time")
+    plt.plot(sizes, ns_means, marker="o", color="r", label="NS Execution Time")
+    plt.xlabel("Matrix Size")
+    plt.ylabel("Execution Time (s)")
+    plt.title("Execution Time Statistics")
+    plt.grid(True)
+    plt.legend()
+    plt.show()

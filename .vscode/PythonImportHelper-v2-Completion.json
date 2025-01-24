@@ -200,6 +200,15 @@
         "documentation": {}
     },
     {
+        "label": "print_execution_time_statistics",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def print_execution_time_statistics(results):\n    \"\"\"\n    Prints the execution time statistics.\n    \"\"\"\n    size_time_ni, size_time_ns = {}, {}\n    for key, values in results.items():\n        size_time_ni.setdefault(values[0], []).append(values[1])\n        size_time_ns.setdefault(values[0], []).append(values[2])\n    sizes = sorted(size_time_ni.keys())\n    ni_means = [np.mean(size_time_ni[size]) for size in sizes]",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
         "label": "benchmark_grasp_constructive",
         "kind": 2,
         "importPath": "benchmark",
@@ -528,7 +537,7 @@
         "kind": 2,
         "importPath": "vizualization",
         "description": "vizualization",
-        "peekOfCode": "def plot_execution_time_statistics(results):\n    \"\"\"\n    Function to plot the execution time statistics.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of execution times startig with the matrix size.\n    \"\"\"\n    for key, values in results.items():\n        plt.figure(figsize=(10, 6))\n        plt.boxplot(values, vert=False)\n        plt.xlabel(\"Execution Time (s)\")",
+        "peekOfCode": "def plot_execution_time_statistics(results):\n    \"\"\"\n    Function to plot the execution time statistics.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of execution times startig with the matrix size.\n    \"\"\"\n    size_time_ni, size_time_ns = {}, {}\n    for key, values in results.items():\n        size_time_ni.setdefault(values[0], []).append(values[1])\n        size_time_ns.setdefault(values[0], []).append(values[2])",
         "detail": "vizualization",
         "documentation": {}
     }
