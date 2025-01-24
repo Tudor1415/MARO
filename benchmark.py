@@ -283,7 +283,7 @@ def process_file(file_name, search_function, benchmark_instance, debug):
 
 def benchmark(
     filename,
-    search_funciton,
+    search_function,
     benchmark_instance,
     print_statistics,
     debug=False,
@@ -314,7 +314,7 @@ def benchmark(
     for file_name in tqdm(files, desc="Processing files"):
         try:
             file_name, result = process_file(
-                file_name, search_function, benchmark_instance, max_iter, debug
+                file_name, search_function, benchmark_instance, debug
             )
             results[file_name] = result
         except Exception as e:
@@ -366,9 +366,20 @@ if __name__ == "__main__":
     #     max_iter=50,
     #     debug=False,
     # )
+
+    ILS_NS_10_40 = lambda x: ILS(
+        x,
+        objective_function,
+        becker_constructive_algorithm,
+        perturb_random,
+        visit_NS,
+        10,
+        False,
+        False,
+    )
     benchmark(
         "results_neigh_diversity.json",
-        search_function,
+        ILS_NS_10_40,
         benchmark_neighbourhood_diversity,
         plot_pairwise_diversity_cdf,
         max_iter=50,

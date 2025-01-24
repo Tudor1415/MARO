@@ -239,7 +239,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def process_file(file_name, search_function, benchmark_instance, debug):\n    matrix = read_square_matrix_from_file(file_name, debug)[\"matrix\"]\n    results = benchmark_instance(matrix, search_function, debug)\n    return file_name, results\ndef benchmark(\n    filename,\n    search_funciton,\n    benchmark_instance,\n    print_statistics,\n    debug=False,",
+        "peekOfCode": "def process_file(file_name, search_function, benchmark_instance, debug):\n    matrix = read_square_matrix_from_file(file_name, debug)[\"matrix\"]\n    results = benchmark_instance(matrix, search_function, debug)\n    return file_name, results\ndef benchmark(\n    filename,\n    search_function,\n    benchmark_instance,\n    print_statistics,\n    debug=False,",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -248,7 +248,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def benchmark(\n    filename,\n    search_funciton,\n    benchmark_instance,\n    print_statistics,\n    debug=False,\n):\n    \"\"\"\n    Reads all the files in the current directory that have the .mat extension and runs the benchmark_instance function on them.\n    Parameters:",
+        "peekOfCode": "def benchmark(\n    filename,\n    search_function,\n    benchmark_instance,\n    print_statistics,\n    debug=False,\n):\n    \"\"\"\n    Reads all the files in the current directory that have the .mat extension and runs the benchmark_instance function on them.\n    Parameters:",
         "detail": "benchmark",
         "documentation": {}
     },
