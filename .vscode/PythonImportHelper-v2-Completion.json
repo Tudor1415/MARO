@@ -200,15 +200,6 @@
         "documentation": {}
     },
     {
-        "label": "print_execution_time_statistics",
-        "kind": 2,
-        "importPath": "benchmark",
-        "description": "benchmark",
-        "peekOfCode": "def print_execution_time_statistics(results):\n    \"\"\"\n    Prints the results of the execution time benchmark.\n    \"\"\"\n    times_NI = [value[0] for key, value in results.items()]\n    times_NS = [value[1] for key, value in results.items()]\n    print(\"Statistics:\")\n    print(\n        f\"Execution time N_I: {np.mean(times_NI):.2f} ± {np.std(times_NI):.2f} seconds\"\n    )",
-        "detail": "benchmark",
-        "documentation": {}
-    },
-    {
         "label": "benchmark_grasp_constructive",
         "kind": 2,
         "importPath": "benchmark",
@@ -529,6 +520,15 @@
         "importPath": "vizualization",
         "description": "vizualization",
         "peekOfCode": "def plot_pairwise_diversity_cdf(results):\n    \"\"\"\n    Function to plot the CDF of pairwise diversity over iterations.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.\n    \"\"\"\n    for key, values in results.items():\n        plt.figure(figsize=(10, 6))\n        sorted_values = np.sort(values)\n        cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)",
+        "detail": "vizualization",
+        "documentation": {}
+    },
+    {
+        "label": "plot_execution_time_statistics",
+        "kind": 2,
+        "importPath": "vizualization",
+        "description": "vizualization",
+        "peekOfCode": "def plot_execution_time_statistics(results):\n    \"\"\"\n    Function to plot the execution time statistics.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of execution times startig with the matrix size.\n    \"\"\"\n    for key, values in results.items():\n        plt.figure(figsize=(10, 6))\n        plt.boxplot(values, vert=False)\n        plt.xlabel(\"Execution Time (s)\")",
         "detail": "vizualization",
         "documentation": {}
     }

@@ -253,23 +253,7 @@ def benchmark_execution_time(matrix, max_iter=100, debug=False):
         print(f"Execution time NI: {execution_time_NI:.2f} seconds")
         print(f"Execution time NS: {execution_time_NS:.2f} seconds")
 
-    return execution_time_NI, execution_time_NS
-
-
-def print_execution_time_statistics(results):
-    """
-    Prints the results of the execution time benchmark.
-    """
-    times_NI = [value[0] for key, value in results.items()]
-    times_NS = [value[1] for key, value in results.items()]
-
-    print("Statistics:")
-    print(
-        f"Execution time N_I: {np.mean(times_NI):.2f} ± {np.std(times_NI):.2f} seconds"
-    )
-    print(
-        f"Execution time N_S: {np.mean(times_NS):.2f} ± {np.std(times_NS):.2f} seconds"
-    )
+    return len(matrix), execution_time_NI, execution_time_NS
 
 
 def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):

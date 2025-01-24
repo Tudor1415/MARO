@@ -128,3 +128,19 @@ def plot_pairwise_diversity_cdf(results):
         plt.title("Pairwise Diversity CDF for {}".format(key))
         plt.grid(True)
         plt.show()
+
+
+def plot_execution_time_statistics(results):
+    """
+    Function to plot the execution time statistics.
+
+    Args:
+        results (dict of list of floats): Dict linking instance name to list of execution times startig with the matrix size.
+    """
+    for key, values in results.items():
+        plt.figure(figsize=(10, 6))
+        plt.boxplot(values, vert=False)
+        plt.xlabel("Execution Time (s)")
+        plt.title("Execution Time Statistics for {}".format(key))
+        plt.grid(True)
+        plt.show()
