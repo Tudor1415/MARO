@@ -83,7 +83,7 @@ def granularity_coarse(i, j):
     return i
 
 
-def tabu_iteration(matrix, pi, tabu_list, granularity_func, tenure):
+def tabu_iteration(matrix, pi, tabu_list, tenure):
     """
     Performs one iteration of the tabu search to find the best neighbor.
 
@@ -91,7 +91,6 @@ def tabu_iteration(matrix, pi, tabu_list, granularity_func, tenure):
     - matrix: 2D list representing the cost matrix.
     - pi: List representing the current permutation.
     - tabu_list: List of tabu moves.
-    - granularity_func: Function to determine tabu granularity.
     - tenure: Maximum size of the tabu list.
 
     Returns:
@@ -101,32 +100,31 @@ def tabu_iteration(matrix, pi, tabu_list, granularity_func, tenure):
     best_neighbor_value = 0
     best_neighbor = None
     size = len(pi)
-
+    # local search : parcourt le voisinage et choisit le meilleur
     for i in range(size):
         for j in range(size):
-            if (
-                i != j
-                and granularity_func(i, j) not in tabu_list
-                and delta(matrix, pi, i, j) > 0
-            ):
-                current_neighbor = insert(pi, i, j)
-                current_neighbor_value = get_obj_value(matrix, current_neighbor)
+            if i!=j :
+                element_at_i= pi[i]
 
-                if current_neighbor_value > best_neighbor_value:
-                    best_neighbor_value = current_neighbor_value
-                    best_neighbor = current_neighbor
-                    tabu_move = granularity_func(i, j)
+                if element_at_i not in tabu_list and insert(pi,i,j)!=pi:
+                    current_neighbor=insert(pi,i,j)
+                    current_neighbor_value=get_obj_value(matrix,current_neighbor)
+
+                    if current_neighbor_value>best_neighbor_value:
+                        best_neighbor_value=current_neighbor_value
+                        best_neighbor=current_neighbor
+                        tabu_move=element_at_i
 
     if best_neighbor is not None and tabu_move not in tabu_list:
         tabu_list.append(tabu_move)
-    if len(tabu_list) > tenure:
+    if len(tabu_list)>tenure:
         tabu_list.pop(0)
     if best_neighbor is not None:
-        return best_neighbor_value, best_neighbor
+        return best_neighbor_value,best_neighbor
     return None
 
 
-def tabu_search(matrix, pi_init, tenure, n, granularity_func):
+def tabu_search(matrix, pi_init=False, tenure=False, iter=50, log_visits=False):
     """
     Performs tabu search to optimize the objective function.
 
@@ -134,29 +132,35 @@ def tabu_search(matrix, pi_init, tenure, n, granularity_func):
     - matrix: 2D list representing the cost matrix.
     - pi_init: Initial permutation.
     - tenure: Maximum size of the tabu list.
-    - n: Number of iterations to perform.
-    - granularity_func: Function to determine tabu granularity.
+    - iter: Number of iterations to perform.
+    - log_visits: Boolean flag to log the visited permutations.
 
     Returns:
     - Tuple (best_obj_value, best_pi): Best objective value and corresponding permutation.
     """
-    best_obj_value = get_obj_value(matrix, pi_init)
-    best_pi = pi_init
-    tabu_list = []
-
-    for k in range(n):
-        best_neighbor = tabu_iteration(
-            matrix, best_pi, tabu_list, granularity_func, tenure
-        )
+    if not pi_init:
+        pi_init = list(range(len(matrix)))
+    if not tenure:
+        tenure = int(len(matrix)/4)
+    best_obj_value=get_obj_value(matrix,pi_init)
+    best_pi=pi_init
+    current_pi=best_pi
+    tabu_list=[]
+    visited = [best_pi]
+    for k in range(iter):
+        best_neighbor=tabu_iteration(matrix, current_pi, tabu_list, tenure)
 
         if best_neighbor is not None:
-            current_value, current_pi = best_neighbor
-            if current_value > best_obj_value:
-                best_obj_value = current_value
-                best_pi = current_pi
-
-    return best_obj_value, best_pi
-
+            current_value,current_pi=best_neighbor[0],best_neighbor[1]
+            if log_visits:
+                visited.append(current_pi)
+        if current_value>best_obj_value:
+            best_obj_value=current_value
+            best_pi=current_pi
+    if log_visits:
+        return best_obj_value, best_pi, visited
+    else:
+        return best_obj_value, best_pi
 
 # Example usage
 # Replace `matrix` and `pi_init` with actual values.
