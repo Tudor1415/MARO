@@ -200,7 +200,8 @@ def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):
         becker_constructive_algorithm,
         visit_NI,
         max_iter,
-        debug,
+        True,
+        False,
     )
     if debug:
         print(f"Visited points: {visited}")
@@ -210,7 +211,7 @@ def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):
     idx = 0
     for i in range(n):
         for j in range(i + 1, n):
-            distances[idx] = stats.kendalltau(visited[i], visited[j])[0]
+            distances[idx] = stats.spearmanr(visited[i], visited[j])[0]
             idx += 1
 
     return distances
