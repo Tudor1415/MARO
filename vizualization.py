@@ -5,7 +5,10 @@ import os
 
 
 def plot_permutations_with_pca(
-    permutations_to_plot, objective_function, filename="default"
+    permutations_to_plot,
+    objective_function,
+    filename="default",
+    folder="default",
 ):
     """
     Function to plot permutations in 2D space using PCA.
@@ -85,8 +88,8 @@ def plot_permutations_with_pca(
     )
 
     # Save the plot without legend
-    os.makedirs("plots/visited_permutations", exist_ok=True)
-    plt.savefig(f"plots/visited_permutations/{filename}.pdf")
+    os.makedirs(f"plots/visited_permutations/{folder}", exist_ok=True)
+    plt.savefig(f"plots/visited_permutations/{folder}/{filename}.pdf")
     plt.show()
 
     # Create a separate plot for the legend
@@ -120,23 +123,28 @@ def plot_score_evolution(results):
         plt.show()
 
 
-def plot_pairwise_diversity_cdf(results):
+def plot_pairwise_diversity_cdf(results, folder="default", filename="default"):
     """
     Function to plot the CDF of pairwise diversity over iterations.
 
     Args:
         results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.
     """
+    all_values = set()
     for key, values in results.items():
-        plt.figure(figsize=(10, 6))
-        sorted_values = np.sort(values)
-        cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
-        plt.plot(sorted_values, cdf, linestyle="-", color="b", alpha=0.7)
-        plt.xlabel("Pairwise Diversity")
-        plt.ylabel("CDF")
-        plt.title("Pairwise Diversity CDF for {}".format(key))
-        plt.grid(True)
-        plt.show()
+        for value in values:
+            all_values.add(value)
+    plt.figure(figsize=(10, 6))
+    sorted_values = np.sort(list(all_values))
+    cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
+    plt.plot(sorted_values, cdf, linestyle="-", color="b", alpha=0.7)
+    plt.xlabel("Pairwise Diversity")
+    plt.ylabel("CDF")
+    plt.title("Pairwise Diversity CDF for {}".format(key))
+    plt.grid(True)
+    os.makedirs(f"plots/diversity/{folder}", exist_ok=True)
+    plt.savefig(f"plots/diversity/{folder}/{filename}.pdf")
+    plt.show()
 
 
 def plot_execution_time_statistics(results):
@@ -148,8 +156,8 @@ def plot_execution_time_statistics(results):
     """
     size_time_ni, size_time_ns = {}, {}
     for key, values in results.items():
-        size_time_ni.setdefault(values[0], []).append(values[1])
-        size_time_ns.setdefault(values[0], []).append(values[2])
+        size_time_ni.setdefault(values[0], []).append(values[1][0])
+        size_time_ns.setdefault(values[0], []).append(values[1][1])
 
     sizes = sorted(size_time_ni.keys())
     ni_means = [np.mean(size_time_ni[size]) for size in sizes]

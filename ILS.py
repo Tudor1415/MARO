@@ -3,6 +3,7 @@ import json
 import numpy as np
 from tqdm import tqdm
 from datetime import datetime
+from GRASP import objective_function
 
 
 def becker_constructive_algorithm(matrix):
@@ -250,12 +251,88 @@ def objective_function(matrix, permutation):
     return objective_value
 
 
+def LS(
+    matrix,
+    objective_function,
+    visit_N,
+    start_permutation,
+    max_iter=40,
+    log_visits=False,
+    debug=False,
+):
+    """
+    Implements the Local Search (LS) algorithm for the Linear Ordering Problem.
+
+    Parameters:
+    - matrix: 2D numpy array representing the cost matrix (n x n).
+    - objective_function: A function that computes the objective value for a given permutation.
+    - visit_N: A function that generates a new permutation based on the neighbourhood.
+    - start_permutation: The initial permutation to start the search from.
+    - max_iter: Maximum number of iterations to perform.
+    - log_visits: Boolean flag to log the visited permutations.
+    - debug: Boolean flag to enable/disable debugging statements.
+
+    Returns:
+    - best_permutation: The best permutation found by the algorithm.
+    - best_value: The objective value of the best permutation.
+    """
+    if debug:
+        print("Initial permutation:", start_permutation)
+        print("Initial objective value:", objective_function(matrix, start_permutation))
+
+    visited = []
+    current_permutation = start_permutation
+    best_value = objective_function(matrix, current_permutation)
+    for iteration in range(max_iter):
+        # Perform a local search on the current solution
+        new_permutation = visit_N(matrix, current_permutation, objective_function)
+        if log_visits:
+            visited.append(new_permutation)
+
+        # Update the best solution if a better one is found
+        new_value = objective_function(matrix, new_permutation)
+        if new_value > best_value:
+            current_permutation = new_permutation
+            best_value = new_value
+            if debug:
+                print(
+                    f"Iteration {iteration}: Found better permutation {new_permutation} with value {new_value}"
+                )
+
+    if log_visits:
+        return current_permutation, best_value, visited
+    else:
+        return current_permutation, best_value
+
+
+def perturb_random(permutation, percentage=1):
+    """
+    Perturbs a permutation by removing half of the permutation and replacing it with a random permutation.
+
+    Parameters:
+    - permutation: List of indices representing the current order.
+    - percentage: Percentage of the permutation to shuffle.
+    - k: Number of random swap operations to perform.
+
+    Returns:
+    - perturbed_permutation: A new permutation that has been perturbed.
+    """
+    n = len(permutation)
+    to_shuffle = int(percentage * n)
+    indices = list(range(n))
+    np.random.shuffle(indices)
+    perturbed_permutation = permutation[:to_shuffle] + indices[to_shuffle:]
+    return perturbed_permutation
+
+
 def ILS(
     matrix,
     objective_function,
     constructive_heuristic,
+    perturbation,
     visit_N,
-    max_iter=100,
+    max_iter=10,
+    max_local_iter=40,
     log_visits=False,
     debug=False,
 ):
@@ -266,6 +343,7 @@ def ILS(
     - matrix: 2D numpy array representing the cost matrix (n x n).
     - objective_function: A function that computes the objective value for a given permutation.
     - constructive_heuristic: A function that generates an initial solution.
+    - perturbation: A function that perturbs a permutation.
     - max_iter: Maximum number of iterations to perform.
     - log_visits: Boolean flag to log the visited permutations.
     - debug: Boolean flag to enable/disable debugging statements.
@@ -275,29 +353,33 @@ def ILS(
     - best_value: The objective value of the best permutation.
     """
     n = matrix.shape[0]
-    best_permutation = constructive_heuristic(matrix)
-    best_value = objective_function(matrix, best_permutation)
+    current_permutation = constructive_heuristic(matrix)
+    best_permutation = current_permutation
+    best_value = objective_function(matrix, current_permutation)
+    visited = [current_permutation]
 
-    visited = [best_permutation]
-    if debug:
-        print("Initial permutation:", best_permutation)
-        print("Initial objective value:", best_value)
-
-    for iteration in range(max_iter):
-        # Perform a local search on the current solution
-        new_permutation = visit_N(matrix, best_permutation, objective_function)
+    for _ in range(max_iter):
         if log_visits:
-            visited.append(new_permutation)
+            local_best_permutation, best_value, visited = LS(
+                matrix=matrix,
+                objective_function=objective_function,
+                visit_N=visit_N,
+                start_permutation=current_permutation,
+                log_visits=True,
+                max_iter=max_local_iter,
+            )
+        else:
+            local_best_permutation, best_value = LS(
+                matrix=matrix,
+                objective_function=objective_function,
+                visit_N=visit_N,
+                start_permutation=current_permutation,
+                max_iter=max_local_iter,
+            )
+        if best_value > objective_function(matrix, local_best_permutation):
+            best_permutation = local_best_permutation
 
-        # Update the best solution if a better one is found
-        new_value = objective_function(matrix, new_permutation)
-        if new_value > best_value:
-            best_permutation = new_permutation
-            best_value = new_value
-            if debug:
-                print(
-                    f"Iteration {iteration}: Found better permutation {new_permutation} with value {new_value}"
-                )
+        current_permutation = perturbation(best_permutation)
 
     if log_visits:
         return best_permutation, best_value, visited
