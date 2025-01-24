@@ -20,7 +20,7 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
     n = len(permutations_to_plot[0])
 
     # Generate 10,000 random permutations
-    random_permutations = [np.random.permutation(n) for _ in range(10_000)]
+    random_permutations = [np.random.permutation(n) for _ in range(100_000)]
 
     # Combine random permutations and the given permutations
     all_permutations = random_permutations + permutations_to_plot
@@ -45,7 +45,7 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
     plt.figure(figsize=(8, 6))
 
     # Plot random permutations with color and size based on score
-    f = 100
+    f = 150
     plt.scatter(
         random_pca[::f, 0],
         random_pca[::f, 1],
@@ -61,7 +61,7 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
         specific_pca[:, 1],
         c="blue",
         alpha=1,
-        label="Provided Permutations",
+        label="Visited Permutations",
     )
 
     # Highlight the first point in orange and the last in yellow
@@ -70,7 +70,7 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
         specific_pca[0, 1],
         c="orange",
         alpha=1,
-        label="First Provided Permutation",
+        label="Starting point",
         edgecolor="k",
         s=100,
     )
@@ -79,7 +79,7 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
         specific_pca[-1, 1],
         c="yellow",
         alpha=1,
-        label="Last Provided Permutation",
+        label="End point",
         edgecolor="k",
         s=100,
     )
@@ -91,3 +91,40 @@ def plot_permutations_with_pca(permutations_to_plot, objective_function):
     plt.grid(True)
     plt.legend()
     plt.show()
+
+
+def plot_score_evolution(results):
+    """
+    Function to plot the evolution of the best score over iterations.
+
+    Args:
+        results (list of floats): List of best scores over iterations.
+    """
+    for key, values in results.items():
+        plt.figure(figsize=(10, 6))
+        plt.plot(values, marker="o", color="b", label="Best Score")
+        plt.xlabel("Iteration")
+        plt.ylabel("Best Score")
+        plt.title("Evolution of Best Score for {}".format(key))
+        plt.grid(True)
+        plt.legend()
+        plt.show()
+
+
+def plot_pairwise_diversity_cdf(results):
+    """
+    Function to plot the CDF of pairwise diversity over iterations.
+
+    Args:
+        results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.
+    """
+    for key, values in results.items():
+        plt.figure(figsize=(10, 6))
+        sorted_values = np.sort(values)
+        cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
+        plt.plot(sorted_values, cdf, linestyle="-", color="b", alpha=0.7)
+        plt.xlabel("Pairwise Diversity")
+        plt.ylabel("CDF")
+        plt.title("Pairwise Diversity CDF for {}".format(key))
+        plt.grid(True)
+        plt.show()

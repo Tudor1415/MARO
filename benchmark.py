@@ -1,6 +1,7 @@
 from ILS import *
 from GRASP import construct_grasp
-from vizualization import plot_permutations_with_pca
+from vizualization import *
+from scipy import stats
 
 
 def benchmark_neighbourhood_instance(matrix, max_iter=100, debug=False):
@@ -154,6 +155,65 @@ def plot_permutations_with_pca_benchmark(results):
         obj_func = lambda x: objective_function(matrix, x)
         plot_permutations_with_pca(visited_points, obj_func)
         break
+
+
+def benchmark_score_evolution(matrix, max_iter=100, debug=False):
+    """
+    Benchmarks the score evolution using the Iterated Local Search (ILS) algorithm.
+    Args:
+        matrix (list of list of int): The input matrix representing the problem instance.
+        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.
+        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.
+    Returns:
+        list: A list of visited points during the ILS algorithm execution.
+    """
+    _, best_value, visited = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NI,
+        max_iter,
+        True,
+        False,
+    )
+
+    if debug:
+        print(f"Best value = {best_value}")
+        print(f"Visited points = {visited}")
+
+    return [objective_function(matrix, permutation) for permutation in visited]
+
+
+def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):
+    """
+    Runs the ILS algorithm and computes the pairwise kendall tau distance between the permutations.
+    Parameters:
+        matrix (np.array): The cost matrix.
+        max_iter (int): The maximum number of iterations for the ILS algorithm.
+        debug (bool): Flag to enable/disable debugging. Default is False.
+    Returns:
+        cummulative distribution of the pairwise kendall tau distance.
+    """
+    _, _, visited = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NI,
+        max_iter,
+        debug,
+    )
+    if debug:
+        print(f"Visited points: {visited}")
+
+    n = len(visited)
+    distances = np.zeros(n * (n - 1) // 2)
+    idx = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            distances[idx] = stats.kendalltau(visited[i], visited[j])[0]
+            idx += 1
+
+    return distances
 
 
 def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):
@@ -324,10 +384,24 @@ if __name__ == "__main__":
     #     max_iter=100,
     #     debug=False,
     # )
+    # benchmark(
+    #     "results_visited_points.json",
+    #     benchmark_visited_points,
+    #     plot_permutations_with_pca_benchmark,
+    #     max_iter=50,
+    #     debug=False,
+    # )
+    # benchmark(
+    #     "results_score_evolution.json",
+    #     benchmark_score_evolution,
+    #     plot_score_evolution,
+    #     max_iter=50,
+    #     debug=False,
+    # )
     benchmark(
-        "results_visited_points.json",
-        benchmark_visited_points,
-        plot_permutations_with_pca_benchmark,
-        max_iter=10,
+        "results_neigh_diversity.json",
+        benchmark_neighbourhood_diversity,
+        plot_pairwise_diversity_cdf,
+        max_iter=50,
         debug=False,
     )
