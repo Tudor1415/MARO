@@ -1,5 +1,6 @@
 from ILS import *
 from GRASP import construct_grasp
+from TABU import *
 from vizualization import *
 from scipy import stats
 import timeit
@@ -215,6 +216,46 @@ def print_execution_time_statistics(results):
             f"Size: {size}, NI: {np.mean(size_time_ni[size]):.2f} ± {np.var(size_time_ns[size]):.2f}, , NS: {np.mean(size_time_ns[size]):.2f} ± {np.var(size_time_ni[size]):.2f}"
         )
 
+def benchmark_tabu_tenure(matrix, pi_init, n, optimum=inf,tenure_values=[0, 5, 10, 15, 20, 25, 30]):
+    """
+    Runs the Tabu algorithm with different tenure values and benchmarks its performance.
+    """
+    results = []
+    for tenure in tenure_values:
+        best_value = tabu_search(matrix, pi_init, tenure, n)[0]
+        deviation = abs(optimum - best_value) / optimum * 100  # Pourcentage de déviation par rapport à l'optimum
+        results.append((tenure, best_value, deviation))
+
+    return results
+
+def print_tabu_tenure_statistics(results, optimum=inf):
+    # Extraire les données des résultats
+    tenure_values = [r[0] for r in results]
+    best_values = [r[1] for r in results]
+    deviations = [r[2] for r in results]
+
+    # Création de la figure
+    fig, ax1 = plt.subplots()
+
+    # Axe Y pour les valeurs obtenues
+    ax1.set_xlabel('Tenure (taille de la liste tabou)')
+    ax1.set_ylabel('Valeur obtenue', color='tab:blue')
+    ax1.plot(tenure_values, best_values, 'o-', color='tab:blue', label='Valeur obtenue')
+    ax1.axhline(optimum, color='tab:green', linestyle='--', label='Optimum')
+    ax1.tick_params(axis='y', labelcolor='tab:blue')
+    ax1.legend(loc='upper left')
+
+    # Axe Y pour les déviations
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('Déviation (%)', color='tab:red')
+    ax2.plot(tenure_values, deviations, 's-', color='tab:red', label='Déviation (%)')
+    ax2.tick_params(axis='y', labelcolor='tab:red')
+    ax2.legend(loc='upper right')
+
+    # Titre et affichage
+    plt.title('Impact de la taille de la liste tabou sur les performances')
+    fig.tight_layout()
+    plt.show()
 
 def read_square_matrix_from_file(file_path, debug=False):
     """
@@ -395,11 +436,26 @@ if __name__ == "__main__":
         log_visits=True,
         debug=False,
     )
+    TABU = lambda x: tabu_search(
+        x,
+        pi_init=False,
+        tenure=False,
+        iter=50,
+        log_visits=True
+    )
+
     benchmark(
         "results_neigh_diversity.json",
         ILS_NI_10_40,
         benchmark_neighbourhood_diversity,
         lambda x: plot_pairwise_diversity_cdf(x, folder="ILS", filename="NI"),
+        debug=False,
+    )
+    benchmark(
+        "results_neigh_diversity.json",
+        TABU,
+        benchmark_neighbourhood_diversity,
+        lambda x: plot_pairwise_diversity_cdf(x, folder="TABU", filename="NI"),
         debug=False,
     )
     # benchmark(
