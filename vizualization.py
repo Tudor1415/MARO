@@ -139,6 +139,7 @@ def plot_pairwise_diversity_cdf(results, folder="default", filename="default"):
     cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
     plt.plot(sorted_values, cdf, linestyle="-", color="b", alpha=0.7)
     plt.xlabel("Pairwise Diversity")
+    plt.xticks(np.arange(0, 1.1, 0.1))
     plt.ylabel("CDF")
     plt.title("Pairwise Diversity CDF for {}".format(key))
     plt.grid(True)
