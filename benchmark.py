@@ -438,16 +438,16 @@ if __name__ == "__main__":
     #     max_iter=50,
     #     debug=False,
     # )
-    # benchmark(
-    #     "results_neigh_diversity.json",
-    #     benchmark_neighbourhood_diversity,
-    #     plot_pairwise_diversity_cdf,
-    #     max_iter=50,
-    #     debug=False,
-    # )
     benchmark(
-        "results_execution_time.json",
-        benchmark_execution_time,
-        print_execution_time_statistics,
+        "results_neigh_diversity.json",
+        benchmark_neighbourhood_diversity,
+        plot_pairwise_diversity_cdf,
         max_iter=50,
+        debug=False,
     )
+    # benchmark(
+    #     "results_execution_time.json",
+    #     benchmark_execution_time,
+    #     print_execution_time_statistics,
+    #     max_iter=50,
+    # )
