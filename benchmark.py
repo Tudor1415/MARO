@@ -1,5 +1,8 @@
-from GRASP import construct_grasp
 from ILS import *
+from GRASP import construct_grasp
+from vizualization import *
+from scipy import stats
+import timeit
 
 
 def benchmark_neighbourhood_instance(matrix, max_iter=100, debug=False):
@@ -117,6 +120,162 @@ def print_starting_solution_benchmark_statistics(results):
     print(
         f"Mean relative improvement of Random over Monotone: {mean_random_monotone*100:.2f}% ± {std_random_monotone*100:.2f}%"
     )
+
+
+def benchmark_visited_points(matrix, max_iter=100, debug=False):
+    """
+    Benchmarks the number of visited points using the Iterated Local Search (ILS) algorithm.
+    Args:
+        matrix (list of list of int): The input matrix representing the problem instance.
+        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.
+        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.
+    Returns:
+        list: A list of visited points during the ILS algorithm execution.
+    """
+    _, best_value, visited = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NI,
+        max_iter,
+        True,
+        False,
+    )
+
+    return visited
+
+
+def plot_permutations_with_pca_benchmark(results):
+    """
+    Plots the visited points during the ILS algorithm execution.
+    Args:
+        results (dict): A dict of filename and visited points.
+    """
+    for key, visited_points in results.items():
+        matrix = read_square_matrix_from_file(key, False)["matrix"]
+        obj_func = lambda x: objective_function(matrix, x)
+        plot_permutations_with_pca(visited_points, obj_func)
+        break
+
+
+def benchmark_score_evolution(matrix, max_iter=100, debug=False):
+    """
+    Benchmarks the score evolution using the Iterated Local Search (ILS) algorithm.
+    Args:
+        matrix (list of list of int): The input matrix representing the problem instance.
+        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.
+        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.
+    Returns:
+        list: A list of visited points during the ILS algorithm execution.
+    """
+    _, best_value, visited = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NI,
+        max_iter,
+        True,
+        False,
+    )
+
+    if debug:
+        print(f"Best value = {best_value}")
+        print(f"Visited points = {visited}")
+
+    return [objective_function(matrix, permutation) for permutation in visited]
+
+
+def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):
+    """
+    Runs the ILS algorithm and computes the pairwise kendall tau distance between the permutations.
+    Parameters:
+        matrix (np.array): The cost matrix.
+        max_iter (int): The maximum number of iterations for the ILS algorithm.
+        debug (bool): Flag to enable/disable debugging. Default is False.
+    Returns:
+        cummulative distribution of the pairwise kendall tau distance.
+    """
+    _, _, visited = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NI,
+        max_iter,
+        True,
+        False,
+    )
+    if debug:
+        print(f"Visited points: {visited}")
+
+    n = len(visited)
+    distances = np.zeros(n * (n - 1) // 2)
+    idx = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            distances[idx] = stats.spearmanr(visited[i], visited[j])[0]
+            idx += 1
+
+    return distances
+
+
+def benchmark_execution_time(matrix, max_iter=100, debug=False):
+    """
+    Runs the ILS algorithm and benchmarks its performance in terms of computational time.
+    """
+    start_time_NI = timeit.default_timer()
+    _, best_value_NI = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NI,
+        max_iter,
+        False,
+        debug,
+    )
+    end_time_NI = timeit.default_timer()
+
+    start_time_NS = timeit.default_timer()
+    _, best_value_NS = ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        visit_NS,
+        max_iter,
+        False,
+        debug,
+    )
+    end_time_NS = timeit.default_timer()
+
+    execution_time_NI = (end_time_NI - start_time_NI) / 5
+    execution_time_NS = (end_time_NS - start_time_NS) / 5
+
+    if debug:
+        print(f"Execution time NI: {execution_time_NI:.2f} seconds")
+        print(f"Execution time NS: {execution_time_NS:.2f} seconds")
+
+    return len(matrix), execution_time_NI, execution_time_NS
+
+
+def print_execution_time_statistics(results):
+    """
+    Prints the execution time statistics.
+    """
+    size_time_ni, size_time_ns = {}, {}
+    for key, values in results.items():
+        size_time_ni.setdefault(values[0], []).append(values[1])
+        size_time_ns.setdefault(values[0], []).append(values[2])
+
+    sizes = sorted(size_time_ni.keys())
+    ni_means = [np.mean(size_time_ni[size]) for size in sizes]
+    ni_vars = [np.var(size_time_ni[size]) for size in sizes]
+
+    ns_means = [np.mean(size_time_ns[size]) for size in sizes]
+    ns_vars = [np.var(size_time_ns[size]) for size in sizes]
+
+    for size in sizes:
+        print(
+            f"Size: {size}, NI: {np.mean(size_time_ni[size]):.2f} ± {np.var(size_time_ns[size]):.2f}, , NS: {np.mean(size_time_ns[size]):.2f} ± {np.var(size_time_ni[size]):.2f}"
+        )
 
 
 def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):
@@ -256,10 +415,12 @@ def benchmark(
         except Exception as e:
             print(f"Error processing {file_name}: {e}")
 
-    with open(filename, "w") as file:
+    os.makedirs("results", exist_ok=True)
+    with open("results/" + filename, "w") as file:
         json.dump(results, file, indent=4, default=convert_to_native)
 
-    print_statistics(results)
+    if print_statistics:
+        print_statistics(results)
 
     return results
 
@@ -279,10 +440,37 @@ if __name__ == "__main__":
     #     max_iter=100,
     #     debug=False,
     # )
+    # benchmark(
+    #     "results_grasp_constructive.json",
+    #     benchmark_grasp_constructive,
+    #     print_grasp_constructive_benchmark_statistics,
+    #     max_iter=100,
+    #     debug=False,
+    # )
     benchmark(
-        "results_grasp_constructive.json",
-        benchmark_grasp_constructive,
-        print_grasp_constructive_benchmark_statistics,
-        max_iter=100,
+        "results_visited_points.json",
+        benchmark_visited_points,
+        plot_permutations_with_pca_benchmark,
+        max_iter=50,
         debug=False,
     )
+    # benchmark(
+    #     "results_score_evolution.json",
+    #     benchmark_score_evolution,
+    #     plot_score_evolution,
+    #     max_iter=50,
+    #     debug=False,
+    # )
+    # benchmark(
+    #     "results_neigh_diversity.json",
+    #     benchmark_neighbourhood_diversity,
+    #     plot_pairwise_diversity_cdf,
+    #     max_iter=50,
+    #     debug=False,
+    # )
+    # benchmark(
+    #     "results_execution_time.json",
+    #     benchmark_execution_time,
+    #     plot_execution_time_statistics,
+    #     max_iter=50,
+    # )

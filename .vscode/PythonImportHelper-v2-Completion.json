@@ -1,5 +1,13 @@
 [
     {
+        "label": "*",
+        "importPath": "ILS",
+        "description": "ILS",
+        "isExtraImport": true,
+        "detail": "ILS",
+        "documentation": {}
+    },
+    {
         "label": "construct_grasp",
         "importPath": "GRASP",
         "description": "GRASP",
@@ -9,10 +17,27 @@
     },
     {
         "label": "*",
-        "importPath": "ILS",
-        "description": "ILS",
+        "importPath": "vizualization",
+        "description": "vizualization",
         "isExtraImport": true,
-        "detail": "ILS",
+        "detail": "vizualization",
+        "documentation": {}
+    },
+    {
+        "label": "stats",
+        "importPath": "scipy",
+        "description": "scipy",
+        "isExtraImport": true,
+        "detail": "scipy",
+        "documentation": {}
+    },
+    {
+        "label": "timeit",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "timeit",
+        "description": "timeit",
+        "detail": "timeit",
         "documentation": {}
     },
     {
@@ -77,6 +102,23 @@
         "documentation": {}
     },
     {
+        "label": "matplotlib.pyplot",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "matplotlib.pyplot",
+        "description": "matplotlib.pyplot",
+        "detail": "matplotlib.pyplot",
+        "documentation": {}
+    },
+    {
+        "label": "PCA",
+        "importPath": "sklearn.decomposition",
+        "description": "sklearn.decomposition",
+        "isExtraImport": true,
+        "detail": "sklearn.decomposition",
+        "documentation": {}
+    },
+    {
         "label": "benchmark_neighbourhood_instance",
         "kind": 2,
         "importPath": "benchmark",
@@ -109,6 +151,60 @@
         "importPath": "benchmark",
         "description": "benchmark",
         "peekOfCode": "def print_starting_solution_benchmark_statistics(results):\n    \"\"\"\n    Prints the relative improvements of the different starting solutions.\n    \"\"\"\n    improvements_becker_random, improvements_random_monotone = [], []\n    for key, (monotone, random, becker) in results.items():\n        improvement_becker_random = (becker - random) / random\n        improvements_becker_random.append(improvement_becker_random)\n        improvement_random_monotone = (random - monotone) / monotone\n        improvements_random_monotone.append(improvement_random_monotone)",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "benchmark_visited_points",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def benchmark_visited_points(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Benchmarks the number of visited points using the Iterated Local Search (ILS) algorithm.\n    Args:\n        matrix (list of list of int): The input matrix representing the problem instance.\n        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.\n        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.\n    Returns:\n        list: A list of visited points during the ILS algorithm execution.\n    \"\"\"",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "plot_permutations_with_pca_benchmark",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def plot_permutations_with_pca_benchmark(results):\n    \"\"\"\n    Plots the visited points during the ILS algorithm execution.\n    Args:\n        results (dict): A dict of filename and visited points.\n    \"\"\"\n    for key, visited_points in results.items():\n        matrix = read_square_matrix_from_file(key, False)[\"matrix\"]\n        obj_func = lambda x: objective_function(matrix, x)\n        plot_permutations_with_pca(visited_points, obj_func)",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "benchmark_score_evolution",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def benchmark_score_evolution(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Benchmarks the score evolution using the Iterated Local Search (ILS) algorithm.\n    Args:\n        matrix (list of list of int): The input matrix representing the problem instance.\n        max_iter (int, optional): The maximum number of iterations for the ILS algorithm. Defaults to 100.\n        debug (bool, optional): If True, enables debug mode for additional output. Defaults to False.\n    Returns:\n        list: A list of visited points during the ILS algorithm execution.\n    \"\"\"",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "benchmark_neighbourhood_diversity",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def benchmark_neighbourhood_diversity(matrix, max_iter=50, debug=False):\n    \"\"\"\n    Runs the ILS algorithm and computes the pairwise kendall tau distance between the permutations.\n    Parameters:\n        matrix (np.array): The cost matrix.\n        max_iter (int): The maximum number of iterations for the ILS algorithm.\n        debug (bool): Flag to enable/disable debugging. Default is False.\n    Returns:\n        cummulative distribution of the pairwise kendall tau distance.\n    \"\"\"",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "benchmark_execution_time",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def benchmark_execution_time(matrix, max_iter=100, debug=False):\n    \"\"\"\n    Runs the ILS algorithm and benchmarks its performance in terms of computational time.\n    \"\"\"\n    start_time_NI = timeit.default_timer()\n    _, best_value_NI = ILS(\n        matrix,\n        objective_function,\n        becker_constructive_algorithm,\n        visit_NI,",
+        "detail": "benchmark",
+        "documentation": {}
+    },
+    {
+        "label": "print_execution_time_statistics",
+        "kind": 2,
+        "importPath": "benchmark",
+        "description": "benchmark",
+        "peekOfCode": "def print_execution_time_statistics(results):\n    \"\"\"\n    Prints the execution time statistics.\n    \"\"\"\n    size_time_ni, size_time_ns = {}, {}\n    for key, values in results.items():\n        size_time_ni.setdefault(values[0], []).append(values[1])\n        size_time_ns.setdefault(values[0], []).append(values[2])\n    sizes = sorted(size_time_ni.keys())\n    ni_means = [np.mean(size_time_ni[size]) for size in sizes]",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -342,7 +438,7 @@
         "kind": 2,
         "importPath": "ILS",
         "description": "ILS",
-        "peekOfCode": "def ILS(\n    matrix,\n    objective_function,\n    constructive_heuristic,\n    visit_N,\n    max_iter=100,\n    debug=False,\n):\n    \"\"\"\n    Implements the Iterated Local Search (ILS) algorithm for the Linear Ordering Problem.",
+        "peekOfCode": "def ILS(\n    matrix,\n    objective_function,\n    constructive_heuristic,\n    visit_N,\n    max_iter=100,\n    log_visits=False,\n    debug=False,\n):\n    \"\"\"",
         "detail": "ILS",
         "documentation": {}
     },
@@ -407,6 +503,42 @@
         "description": "TABU",
         "peekOfCode": "def tabu_search(matrix, pi_init, tenure, n, granularity_func):\n    \"\"\"\n    Performs tabu search to optimize the objective function.\n    Parameters:\n    - matrix: 2D list representing the cost matrix.\n    - pi_init: Initial permutation.\n    - tenure: Maximum size of the tabu list.\n    - n: Number of iterations to perform.\n    - granularity_func: Function to determine tabu granularity.\n    Returns:",
         "detail": "TABU",
+        "documentation": {}
+    },
+    {
+        "label": "plot_permutations_with_pca",
+        "kind": 2,
+        "importPath": "vizualization",
+        "description": "vizualization",
+        "peekOfCode": "def plot_permutations_with_pca(\n    permutations_to_plot, objective_function, filename=\"default\"\n):\n    \"\"\"\n    Function to plot permutations in 2D space using PCA.\n    The function:\n      - Generates 100 random permutations (blue, alpha=0.5).\n      - Projects the given permutations (red, alpha=1).\n      - Highlights the first point in orange and the last in yellow.\n      - Colors and sizes random permutations based on their objective function score.",
+        "detail": "vizualization",
+        "documentation": {}
+    },
+    {
+        "label": "plot_score_evolution",
+        "kind": 2,
+        "importPath": "vizualization",
+        "description": "vizualization",
+        "peekOfCode": "def plot_score_evolution(results):\n    \"\"\"\n    Function to plot the evolution of the best score over iterations.\n    Args:\n        results (list of floats): List of best scores over iterations.\n    \"\"\"\n    for key, values in results.items():\n        plt.figure(figsize=(10, 6))\n        plt.plot(values, marker=\"o\", color=\"b\", label=\"Best Score\")\n        plt.xlabel(\"Iteration\")",
+        "detail": "vizualization",
+        "documentation": {}
+    },
+    {
+        "label": "plot_pairwise_diversity_cdf",
+        "kind": 2,
+        "importPath": "vizualization",
+        "description": "vizualization",
+        "peekOfCode": "def plot_pairwise_diversity_cdf(results):\n    \"\"\"\n    Function to plot the CDF of pairwise diversity over iterations.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.\n    \"\"\"\n    for key, values in results.items():\n        plt.figure(figsize=(10, 6))\n        sorted_values = np.sort(values)\n        cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)",
+        "detail": "vizualization",
+        "documentation": {}
+    },
+    {
+        "label": "plot_execution_time_statistics",
+        "kind": 2,
+        "importPath": "vizualization",
+        "description": "vizualization",
+        "peekOfCode": "def plot_execution_time_statistics(results):\n    \"\"\"\n    Function to plot the execution time statistics.\n    Args:\n        results (dict of list of floats): Dict linking instance name to list of execution times starting with the matrix size.\n    \"\"\"\n    size_time_ni, size_time_ns = {}, {}\n    for key, values in results.items():\n        size_time_ni.setdefault(values[0], []).append(values[1])\n        size_time_ns.setdefault(values[0], []).append(values[2])",
+        "detail": "vizualization",
         "documentation": {}
     }
 ]

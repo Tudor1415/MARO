@@ -233,6 +233,17 @@ def objective_function(matrix, permutation):
     """
     objective_value = 0
     n = len(permutation)
+
+    if n != len(matrix):
+        raise ValueError(
+            f"Permutation length {n} does not match matrix size {len(matrix)}"
+        )
+
+    if max(permutation) >= len(matrix):
+        raise ValueError(
+            f"Permutations should have values between 0 and {len(matrix) - 1}"
+        )
+
     for i in range(n):
         for j in range(i + 1, n):
             objective_value += matrix[permutation[i], permutation[j]]
@@ -245,6 +256,7 @@ def ILS(
     constructive_heuristic,
     visit_N,
     max_iter=100,
+    log_visits=False,
     debug=False,
 ):
     """
@@ -255,6 +267,7 @@ def ILS(
     - objective_function: A function that computes the objective value for a given permutation.
     - constructive_heuristic: A function that generates an initial solution.
     - max_iter: Maximum number of iterations to perform.
+    - log_visits: Boolean flag to log the visited permutations.
     - debug: Boolean flag to enable/disable debugging statements.
 
     Returns:
@@ -265,6 +278,7 @@ def ILS(
     best_permutation = constructive_heuristic(matrix)
     best_value = objective_function(matrix, best_permutation)
 
+    visited = [best_permutation]
     if debug:
         print("Initial permutation:", best_permutation)
         print("Initial objective value:", best_value)
@@ -272,6 +286,8 @@ def ILS(
     for iteration in range(max_iter):
         # Perform a local search on the current solution
         new_permutation = visit_N(matrix, best_permutation, objective_function)
+        if log_visits:
+            visited.append(new_permutation)
 
         # Update the best solution if a better one is found
         new_value = objective_function(matrix, new_permutation)
@@ -283,4 +299,7 @@ def ILS(
                     f"Iteration {iteration}: Found better permutation {new_permutation} with value {new_value}"
                 )
 
-    return best_permutation, best_value
+    if log_visits:
+        return best_permutation, best_value, visited
+    else:
+        return best_permutation, best_value
