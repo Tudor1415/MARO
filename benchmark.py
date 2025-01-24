@@ -216,44 +216,6 @@ def print_execution_time_statistics(results):
         )
 
 
-def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):
-    """
-    Runs the ILS algorithm with GRASP constructive heuristic with different alphas and benchmarks its performance.
-    """
-    alpha_values = [0.001, 0.005, 0.01, 0.05, 0.1]
-
-    results = []
-    for alpha in alpha_values:
-        for _ in range(nb_repeats):
-            permutation = construct_grasp(matrix, alpha)
-            value = objective_function(matrix, permutation)
-            results.append((alpha, value))
-
-    return tuple(results)
-
-
-def print_grasp_constructive_benchmark_statistics(results, debug=False):
-    """
-    Prints the results of the GRASP constructive heuristic benchmark.
-    """
-    scores = {}
-    for key, values in results.items():
-        for i in range(len(values)):
-            alpha, value = values[i]
-            if alpha not in scores:
-                scores[alpha] = []
-            scores[alpha].append(value)
-
-    if debug:
-        print("Scores by alpha:")
-        for alpha, value in scores.items():
-            print(f"Alpha = {alpha}: Values = {value}")
-
-    print("Statistics:")
-    for alpha, value in scores.items():
-        print(f"Alpha = {alpha}: Value = {np.mean(value):.2f} ± {np.std(value):.2f}")
-
-
 def read_square_matrix_from_file(file_path, debug=False):
     """
     Reads a square matrix from a file where the size is specified at the beginning.
@@ -313,20 +275,25 @@ def convert_to_native(obj):
         return obj
 
 
-def process_file(file_name, benchmark_instance, max_iter, debug):
+def process_file(file_name, search_function, benchmark_instance, debug):
     matrix = read_square_matrix_from_file(file_name, debug)["matrix"]
-    results = benchmark_instance(matrix, max_iter, debug)
+    results = benchmark_instance(matrix, search_function, debug)
     return file_name, results
 
 
 def benchmark(
-    filename, benchmark_instance, print_statistics, max_iter=100, debug=False
+    filename,
+    search_funciton,
+    benchmark_instance,
+    print_statistics,
+    debug=False,
 ):
     """
     Reads all the files in the current directory that have the .mat extension and runs the benchmark_instance function on them.
 
     Parameters:
         - filename (str): The name of the file to print the results to.
+        - search_function (callable): The search function to use.
         - benchmark_instance (callable): The function to run for benchmarking each file.
         - print_statistics (callable): The function to print the statistics of the results.
         - max_iter (int, optional): Maximum number of iterations for each ILS run. Default is 100.
@@ -347,7 +314,7 @@ def benchmark(
     for file_name in tqdm(files, desc="Processing files"):
         try:
             file_name, result = process_file(
-                file_name, benchmark_instance, max_iter, debug
+                file_name, search_function, benchmark_instance, max_iter, debug
             )
             results[file_name] = result
         except Exception as e:
@@ -385,13 +352,13 @@ if __name__ == "__main__":
     #     max_iter=100,
     #     debug=False,
     # )
-    benchmark(
-        "results_visited_points.json",
-        benchmark_visited_points,
-        lambda x: plot_permutations_with_pca_benchmark(x, "ILS"),
-        max_iter=10,
-        debug=False,
-    )
+    # benchmark(
+    #     "results_visited_points.json",
+    #     benchmark_visited_points,
+    #     lambda x: plot_permutations_with_pca_benchmark(x, "ILS"),
+    #     max_iter=10,
+    #     debug=False,
+    # )
     # benchmark(
     #     "results_score_evolution.json",
     #     benchmark_score_evolution,
@@ -399,13 +366,14 @@ if __name__ == "__main__":
     #     max_iter=50,
     #     debug=False,
     # )
-    # benchmark(
-    #     "results_neigh_diversity.json",
-    #     benchmark_neighbourhood_diversity,
-    #     plot_pairwise_diversity_cdf,
-    #     max_iter=50,
-    #     debug=False,
-    # )
+    benchmark(
+        "results_neigh_diversity.json",
+        search_function,
+        benchmark_neighbourhood_diversity,
+        plot_pairwise_diversity_cdf,
+        max_iter=50,
+        debug=False,
+    )
     # benchmark(
     #     "results_execution_time.json",
     #     benchmark_execution_time,

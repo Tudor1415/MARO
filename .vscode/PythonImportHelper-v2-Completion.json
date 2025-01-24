@@ -217,24 +217,6 @@
         "documentation": {}
     },
     {
-        "label": "benchmark_grasp_constructive",
-        "kind": 2,
-        "importPath": "benchmark",
-        "description": "benchmark",
-        "peekOfCode": "def benchmark_grasp_constructive(matrix, nb_repeats=10, debug=False):\n    \"\"\"\n    Runs the ILS algorithm with GRASP constructive heuristic with different alphas and benchmarks its performance.\n    \"\"\"\n    alpha_values = [0.001, 0.005, 0.01, 0.05, 0.1]\n    results = []\n    for alpha in alpha_values:\n        for _ in range(nb_repeats):\n            permutation = construct_grasp(matrix, alpha)\n            value = objective_function(matrix, permutation)",
-        "detail": "benchmark",
-        "documentation": {}
-    },
-    {
-        "label": "print_grasp_constructive_benchmark_statistics",
-        "kind": 2,
-        "importPath": "benchmark",
-        "description": "benchmark",
-        "peekOfCode": "def print_grasp_constructive_benchmark_statistics(results, debug=False):\n    \"\"\"\n    Prints the results of the GRASP constructive heuristic benchmark.\n    \"\"\"\n    scores = {}\n    for key, values in results.items():\n        for i in range(len(values)):\n            alpha, value = values[i]\n            if alpha not in scores:\n                scores[alpha] = []",
-        "detail": "benchmark",
-        "documentation": {}
-    },
-    {
         "label": "read_square_matrix_from_file",
         "kind": 2,
         "importPath": "benchmark",
@@ -248,7 +230,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def convert_to_native(obj):\n    if isinstance(obj, np.integer):\n        return int(obj)\n    elif isinstance(obj, np.floating):\n        return float(obj)\n    elif isinstance(obj, np.ndarray):\n        return obj.tolist()\n    else:\n        return obj\ndef process_file(file_name, benchmark_instance, max_iter, debug):",
+        "peekOfCode": "def convert_to_native(obj):\n    if isinstance(obj, np.integer):\n        return int(obj)\n    elif isinstance(obj, np.floating):\n        return float(obj)\n    elif isinstance(obj, np.ndarray):\n        return obj.tolist()\n    else:\n        return obj\ndef process_file(file_name, search_function, benchmark_instance, debug):",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -257,7 +239,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def process_file(file_name, benchmark_instance, max_iter, debug):\n    matrix = read_square_matrix_from_file(file_name, debug)[\"matrix\"]\n    results = benchmark_instance(matrix, max_iter, debug)\n    return file_name, results\ndef benchmark(\n    filename, benchmark_instance, print_statistics, max_iter=100, debug=False\n):\n    \"\"\"\n    Reads all the files in the current directory that have the .mat extension and runs the benchmark_instance function on them.\n    Parameters:",
+        "peekOfCode": "def process_file(file_name, search_function, benchmark_instance, debug):\n    matrix = read_square_matrix_from_file(file_name, debug)[\"matrix\"]\n    results = benchmark_instance(matrix, search_function, debug)\n    return file_name, results\ndef benchmark(\n    filename,\n    search_funciton,\n    benchmark_instance,\n    print_statistics,\n    debug=False,",
         "detail": "benchmark",
         "documentation": {}
     },
@@ -266,7 +248,7 @@
         "kind": 2,
         "importPath": "benchmark",
         "description": "benchmark",
-        "peekOfCode": "def benchmark(\n    filename, benchmark_instance, print_statistics, max_iter=100, debug=False\n):\n    \"\"\"\n    Reads all the files in the current directory that have the .mat extension and runs the benchmark_instance function on them.\n    Parameters:\n        - filename (str): The name of the file to print the results to.\n        - benchmark_instance (callable): The function to run for benchmarking each file.\n        - print_statistics (callable): The function to print the statistics of the results.\n        - max_iter (int, optional): Maximum number of iterations for each ILS run. Default is 100.",
+        "peekOfCode": "def benchmark(\n    filename,\n    search_funciton,\n    benchmark_instance,\n    print_statistics,\n    debug=False,\n):\n    \"\"\"\n    Reads all the files in the current directory that have the .mat extension and runs the benchmark_instance function on them.\n    Parameters:",
         "detail": "benchmark",
         "documentation": {}
     },
