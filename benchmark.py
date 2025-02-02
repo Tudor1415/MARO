@@ -158,7 +158,7 @@ def benchmark_execution_time(matrix, search_functions, debug=False):
     start_times, end_times = [], []
     for search_function in search_functions:
         start_time = timeit.default_timer()
-        _, best_value = search_function
+        _, best_value = search_function(matrix)
         end_time = timeit.default_timer()
         start_times.append(start_time)
         end_times.append(end_time)
@@ -255,7 +255,7 @@ def convert_to_native(obj):
 
 def process_file(file_name, search_function, benchmark_instance, debug):
     matrix = read_square_matrix_from_file(file_name, debug)["matrix"]
-    results = benchmark_instance(matrix, search_function, debug)
+    results = benchmark_instance(matrix, search_function, debug=debug)
     return file_name, results
 
 
@@ -287,7 +287,7 @@ def benchmark(
         "instances/" + file_name
         for file_name in os.listdir("instances")
         if file_name.endswith(".mat")
-    ][:1]
+    ]
 
     for file_name in tqdm(files, desc="Processing files"):
         try:
@@ -310,47 +310,43 @@ def benchmark(
 
 if __name__ == "__main__":
 
-    # ILS_10 = lambda matrix, neigh: ILS(
-    #     matrix,
-    #     objective_function,
-    #     becker_constructive_algorithm,
-    #     perturb_random,
-    #     neigh,
-    #     10,
-    #     log_visits=False,
-    #     debug=False,
-    # )
-    # benchmark(
-    #     "results_neigh.json",
-    #     ILS_10,
-    #     benchmark_neighbourhood_instance,
-    #     print_neighbourhood_benchmark_statistics,
-    #     debug=False,
-    # )
-    # benchmark(
-    #     "results_start.json",
-    #     benchmark_starting_solution_instance,
-    #     print_starting_solution_benchmark_statistics,
-    #     max_iter=100,
-    #     debug=False,
-    # )
-    # benchmark(
-    #     "results_grasp_constructive.json",
-    #     benchmark_grasp_constructive,
-    #     print_grasp_constructive_benchmark_statistics,
-    #     max_iter=100,
-    #     debug=False,
-    # )
+    ILS_10 = lambda matrix, neigh: ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        perturb_random,
+        neigh,
+        10,
+        log_visits=False,
+        debug=False,
+    )
+    benchmark(
+        "results_neigh.json",
+        ILS_10,
+        benchmark_neighbourhood_instance,
+        print_neighbourhood_benchmark_statistics,
+        debug=False,
+    )
 
-    # benchmark(
-    #     "results_score_evolution.json",
-    #     benchmark_score_evolution,
-    #     plot_score_evolution,
-    #     max_iter=50,
-    #     debug=False,
-    # )
+    ILS_10 = lambda matrix, start: ILS(
+        matrix,
+        objective_function,
+        start,
+        perturb_random,
+        visit_NI,
+        10,
+        log_visits=False,
+        debug=False,
+    )
+    benchmark(
+        "results_start.json",
+        ILS_10,
+        benchmark_starting_solution_instance,
+        plot_starting_solution_benchmark_statistics,
+        debug=False,
+    )
 
-    ILS_NI_10 = lambda x: ILS(
+    ILS_NI_10_VISIT = lambda x: ILS(
         x,
         objective_function,
         becker_constructive_algorithm,
@@ -362,24 +358,24 @@ if __name__ == "__main__":
     )
     benchmark(
         "results_visited_points.json",
-        ILS_NI_10,
+        ILS_NI_10_VISIT,
         benchmark_visited_points,
         lambda x: plot_permutations_with_pca_benchmark(
             x, folder="visited_permutations", filename="visited_NI_"
         ),
-        debug=True,
+        debug=False,
     )
-    # benchmark(
-    #     "results_neigh_diversity.json",
-    #     ILS_NI_10,
-    #     benchmark_neighbourhood_diversity,
-    #     lambda x: plot_pairwise_diversity_cdf(
-    #         x, folder="ILS", filename="NI", title="ILS N_I 10 iterations"
-    #     ),
-    #     debug=False,
-    # )
+    benchmark(
+        "results_neigh_diversity.json",
+        ILS_NI_10_VISIT,
+        benchmark_neighbourhood_diversity,
+        lambda x: plot_pairwise_diversity_cdf(
+            x, folder="ILS", filename="NI", title="ILS N_I 10 iterations"
+        ),
+        debug=False,
+    )
 
-    ILS_NS_10 = lambda x: ILS(
+    ILS_NS_10_VISIT = lambda x: ILS(
         x,
         objective_function,
         becker_constructive_algorithm,
@@ -391,36 +387,60 @@ if __name__ == "__main__":
     )
     benchmark(
         "results_visited_points.json",
-        ILS_NS_10,
+        ILS_NS_10_VISIT,
         benchmark_visited_points,
         lambda x: plot_permutations_with_pca_benchmark(
             x, folder="visited_permutations", filename="visited_NS_"
         ),
         debug=False,
     )
-    # benchmark(
-    #     "results_neigh_diversity.json",
-    #     ILS_NS_10,
-    #     benchmark_neighbourhood_diversity,
-    #     lambda x: plot_pairwise_diversity_cdf(
-    #         x, folder="ILS", filename="NS", title="ILS N_S 10 iterations"
-    #     ),
-    #     debug=False,
-    # )
-    # benchmark(
-    #     "results_execution_time.json",
-    #     benchmark_execution_time,
-    #     plot_execution_time_statistics,
-    #     max_iter=50,
-    # )
+    benchmark(
+        "results_neigh_diversity.json",
+        ILS_NS_10_VISIT,
+        benchmark_neighbourhood_diversity,
+        lambda x: plot_pairwise_diversity_cdf(
+            x, folder="ILS", filename="NS", title="ILS N_S 10 iterations"
+        ),
+        debug=False,
+    )
+    ILS_NI_10 = lambda x: ILS(
+        x,
+        objective_function,
+        becker_constructive_algorithm,
+        perturb_random,
+        visit_NI,
+        10,
+        log_visits=False,
+        debug=False,
+    )
+    ILS_NS_10 = lambda x: ILS(
+        x,
+        objective_function,
+        becker_constructive_algorithm,
+        perturb_random,
+        visit_NS,
+        10,
+        log_visits=False,
+        debug=False,
+    )
+    benchmark(
+        "results_execution_time.json",
+        [ILS_NI_10, ILS_NS_10],
+        benchmark_execution_time,
+        plot_execution_time_statistics,
+    )
 
-    # _, best_value_NS = ILS(
-    #     matrix,
-    #     objective_function,
-    #     becker_constructive_algorithm,
-    #     perturb_random,
-    #     visit_NS,
-    #     max_iter,
-    #     False,
-    #     debug,
-    # )
+    benchmark(
+        "results_score_evolution_NI.json",
+        ILS_NI_10_VISIT,
+        benchmark_score_evolution,
+        lambda x: plot_score_evolution(x, "ILS", "NI"),
+        debug=False,
+    )
+    benchmark(
+        "results_score_evolution_NS.json",
+        ILS_NS_10_VISIT,
+        benchmark_score_evolution,
+        lambda x: plot_score_evolution(x, "ILS", "NS"),
+        debug=False,
+    )

@@ -105,21 +105,34 @@ def plot_permutations_with_pca(
     plt.show()
 
 
-def plot_score_evolution(results):
+def plot_score_evolution(results, folder="score_evolution", filename="ILS"):
     """
-    Function to plot the evolution of the best score over iterations.
+    Plots the evolution of the best score over iterations for each instance.
+
+    For each key in the results dictionary (which maps instance names to a list of
+    best scores over iterations), a separate plot is generated, saved to a PDF file,
+    and displayed.
 
     Args:
-        results (list of floats): List of best scores over iterations.
+        results (dict): Dictionary linking instance names to a list of best scores over iterations.
+        folder (str): Subfolder (under "plots") where the figures will be saved.
     """
+    # Create the folder if it does not exist.
+    os.makedirs(f"plots/{folder}", exist_ok=True)
+
     for key, values in results.items():
         plt.figure(figsize=(10, 6))
         plt.plot(values, marker="o", color="b", label="Best Score")
-        plt.xlabel("Iteration")
-        plt.ylabel("Best Score")
-        plt.title("Evolution of Best Score for {}".format(key))
+        plt.xlabel("Solution Swap", fontsize=15)
+        plt.ylabel("Best Score", fontsize=15)
+        plt.title(f"Evolution of Best Score for {filename}_{key}", fontsize=20)
         plt.grid(True)
-        plt.legend()
+        plt.legend(fontsize=12)
+        plt.tight_layout()
+
+        # Save the plot to a PDF file
+        save_path = f"plots/{folder}/{filename}_.pdf"
+        plt.savefig(save_path)
         plt.show()
 
 
@@ -217,27 +230,151 @@ def plot_execution_time_statistics(results):
     plt.show()
 
 
+def extract_optimal(filename):
+    result = {}
+    value = None
+    linear_ordering = None
+
+    with open(filename, "r") as f:
+        for line in f:
+            # Check for the line with "Value" (but not "Value + Diagonals")
+            if line.lstrip().startswith("Value") and "Value +" not in line:
+                # Split on ':' and convert the second part to an integer.
+                parts = line.split(":")
+                if len(parts) >= 2:
+                    try:
+                        value = int(parts[1].strip())
+                    except ValueError:
+                        pass  # Handle conversion errors gracefully if needed.
+            elif line.lstrip().startswith("Linear ordering"):
+                parts = line.split(":")
+                if len(parts) >= 2:
+                    # Convert each number into an integer.
+                    linear_ordering = [int(num) for num in parts[1].split()]
+
+    # Create the dictionary with filename as key and a tuple (value, linear_ordering) as the item.
+    result[filename] = (value, linear_ordering)
+    return result
+
+
+def extract_all_optimal(directory):
+    """Iterates over all files in the specified directory and applies extract_optimal."""
+    all_results = {}
+    # Loop over every file in the directory.
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        # Only process if it's a file.
+        if os.path.isfile(file_path):
+            result = extract_optimal(file_path)
+            all_results.update(result)
+    return all_results
+
+
+def get_base_name(filepath):
+    """
+    Extracts the base filename without its directory and extension.
+    For example, 'optimal/t65i11xx.opt' becomes 't65i11xx'.
+    """
+    return os.path.splitext(os.path.basename(filepath))[0]
+
+
 def plot_starting_solution_benchmark_statistics(results):
     """
-    plots the score of the different starting solutions.
+    Plots a bar plot of the relative improvement of the optimal solution with respect to
+    each method (random and becker). Only keys present in both 'results' and in the optimal
+    dictionary are considered.
+
+    Relative improvement is defined as:
+
+        improvement = ((method_score - optimal_score) / method_score) * 100
+
+    (assuming a minimization problem).
+
+    Additionally, prints the random and becker improvements for each instance and
+    adds extra vertical space between the title and the top of the plot.
     """
+    # Get the optimal results from the "optimal" directory.
+    results_optimal = extract_all_optimal("optimal")
+    results_keys = {get_base_name(key): key for key in results.keys()}
+    results_optimal_keys = {get_base_name(key): key for key in results_optimal.keys()}
 
-    improvements_becker_random, improvements_random_monotone = [], []
-    for key, (monotone, random, becker) in results.items():
-        improvement_becker_random = (becker - random) / random
-        improvements_becker_random.append(improvement_becker_random)
-        improvement_random_monotone = (random - monotone) / monotone
-        improvements_random_monotone.append(improvement_random_monotone)
-
-    mean_barker_random = np.mean(improvements_becker_random)
-    std_barker_random = np.std(improvements_becker_random)
-
-    mean_random_monotone = np.mean(improvements_random_monotone)
-    std_random_monotone = np.std(improvements_random_monotone)
-
-    print(
-        f"Mean relative improvement of Becker over Random: {mean_barker_random*100:.2f}% ± {std_barker_random*100:.2f}%"
+    # Determine common base names
+    common_bases = sorted(
+        set(results_keys.keys()).intersection(results_optimal_keys.keys())
     )
-    print(
-        f"Mean relative improvement of Random over Monotone: {mean_random_monotone*100:.2f}% ± {std_random_monotone*100:.2f}%"
-    )
+
+    # Build lists only for instances where we can compute an improvement.
+    final_common_bases = []
+    improvements_random = []
+    improvements_becker = []
+
+    for key in common_bases:
+        # Build the full keys for accessing the dictionaries.
+        opt_key = "optimal/" + key + ".opt"
+        inst_key = "instances/" + key + ".mat"
+
+        # Retrieve scores.
+        optimal_score, _ = results_optimal[opt_key]
+        random_score, becker_score = results[inst_key]
+
+        # Check for an invalid optimal score.
+        if optimal_score is None or optimal_score == 0:
+            print(f"Optimal score is zero for {key}. Skipping this instance.")
+            continue
+
+        # Calculate relative improvement (only if the method score is non-zero).
+        if random_score:
+            imp_random = (random_score - optimal_score) / random_score * 100
+        else:
+            imp_random = 0
+
+        if becker_score:
+            imp_becker = (becker_score - optimal_score) / becker_score * 100
+        else:
+            imp_becker = 0
+
+        improvements_random.append(imp_random)
+        improvements_becker.append(imp_becker)
+        final_common_bases.append(key)
+
+    # Print improvements for each instance.
+    for base, imp_r, imp_b in zip(
+        final_common_bases, improvements_random, improvements_becker
+    ):
+        print(
+            f"Instance {base}: Random improvement = {imp_r:.1f}%, Becker improvement = {imp_b:.1f}%"
+        )
+
+    # Create a grouped bar plot.
+    x = np.arange(len(final_common_bases))
+    width = 0.35
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    bars_random = ax.bar(x - width / 2, improvements_random, width, label="Random")
+    bars_becker = ax.bar(x + width / 2, improvements_becker, width, label="Becker")
+
+    ax.set_ylabel("Relative Improvement (%)")
+    ax.set_title("Relative Improvement of Optimal Solutions", pad=20)
+    ax.set_xticks(x)
+    ax.set_xticklabels(final_common_bases, rotation=45, ha="right")
+    ax.legend()
+
+    def autolabel(bars):
+        for bar in bars:
+            height = bar.get_height()
+            ax.annotate(
+                f"{height:.1f}%",
+                xy=(bar.get_x() + bar.get_width() / 2, height),
+                xytext=(0, 3),  # Offset above the bar
+                textcoords="offset points",
+                ha="center",
+                va="bottom",
+            )
+
+    autolabel(bars_random)
+    autolabel(bars_becker)
+
+    plt.tight_layout()
+    os.makedirs("plots/start_instance", exist_ok=True)
+    plt.savefig("plots/start_instance/relative_improvement.pdf")
+    plt.show()
