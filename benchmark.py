@@ -1,8 +1,8 @@
-from ILS import *
-from GRASP import construct_grasp
-from vizualization import *
-from scipy import stats
 import timeit
+from ILS import *
+from scipy import stats
+from vizualization import *
+from GRASP import construct_grasp
 
 
 def benchmark_neighbourhood_instance(matrix, search_function, debug=False):
@@ -146,27 +146,29 @@ def benchmark_score_evolution(matrix, search_function, debug=False):
 
 def benchmark_neighbourhood_diversity(matrix, search_function, debug=False):
     """
-    Runs the ILS algorithm and computes the pairwise kendall tau distance between the permutations.
+    Runs the ILS algorithm and computes the pairwise spearman r distance between the permutations.
+    Also computes the spearman r distance between the starting solution and the best solution found.
     Parameters:
         matrix (np.array): The cost matrix.
         search_function (callable): The search function to use.
         debug (bool): Flag to enable/disable debugging. Default is False.
     Returns:
-        cummulative distribution of the pairwise kendall tau distance.
+        cummulative distribution of the pairwise spearman r distance.
     """
     _, _, visited = search_function(matrix)
     if debug:
         print(f"Visited points: {visited}")
 
     n = len(visited)
-    distances = np.zeros(n * (n - 1) // 2)
+    pairwise_dist = np.zeros(n * (n - 1) // 2)
+
     idx = 0
     for i in range(n):
         for j in range(i + 1, n):
-            distances[idx] = stats.spearmanr(visited[i], visited[j])[0]
+            pairwise_dist[idx] = stats.spearmanr(visited[i], visited[j])[0]
             idx += 1
 
-    return distances
+    return pairwise_dist, stats.spearmanr(visited[0], visited[-1])[0]
 
 
 def benchmark_execution_time(matrix, search_functions, debug=False):
