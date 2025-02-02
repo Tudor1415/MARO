@@ -69,32 +69,6 @@ def benchmark_starting_solution_instance(
     return (mean_random_score, best_value_becker)
 
 
-def print_starting_solution_benchmark_statistics(results):
-    """
-    Prints the relative improvements of the different starting solutions.
-    """
-
-    improvements_becker_random, improvements_random_monotone = [], []
-    for key, (monotone, random, becker) in results.items():
-        improvement_becker_random = (becker - random) / random
-        improvements_becker_random.append(improvement_becker_random)
-        improvement_random_monotone = (random - monotone) / monotone
-        improvements_random_monotone.append(improvement_random_monotone)
-
-    mean_barker_random = np.mean(improvements_becker_random)
-    std_barker_random = np.std(improvements_becker_random)
-
-    mean_random_monotone = np.mean(improvements_random_monotone)
-    std_random_monotone = np.std(improvements_random_monotone)
-
-    print(
-        f"Mean relative improvement of Becker over Random: {mean_barker_random*100:.2f}% ± {std_barker_random*100:.2f}%"
-    )
-    print(
-        f"Mean relative improvement of Random over Monotone: {mean_random_monotone*100:.2f}% ± {std_random_monotone*100:.2f}%"
-    )
-
-
 def benchmark_visited_points(matrix, search_function, debug=False):
     """
     Benchmarks the number of visited points using the Iterated Local Search (ILS) algorithm.
@@ -334,23 +308,23 @@ def benchmark(
 
 if __name__ == "__main__":
 
-    ILS_10 = lambda matrix, neigh: ILS(
-        matrix,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        neigh,
-        10,
-        log_visits=False,
-        debug=False,
-    )
-    benchmark(
-        "results_neigh.json",
-        ILS_10,
-        benchmark_neighbourhood_instance,
-        print_neighbourhood_benchmark_statistics,
-        debug=False,
-    )
+    # ILS_10 = lambda matrix, neigh: ILS(
+    #     matrix,
+    #     objective_function,
+    #     becker_constructive_algorithm,
+    #     perturb_random,
+    #     neigh,
+    #     10,
+    #     log_visits=False,
+    #     debug=False,
+    # )
+    # benchmark(
+    #     "results_neigh.json",
+    #     ILS_10,
+    #     benchmark_neighbourhood_instance,
+    #     print_neighbourhood_benchmark_statistics,
+    #     debug=False,
+    # )
     # benchmark(
     #     "results_start.json",
     #     benchmark_starting_solution_instance,
@@ -417,6 +391,26 @@ if __name__ == "__main__":
     #     ),
     #     debug=False,
     # )
+
+    ILS_NS_10 = lambda x: ILS(
+        x,
+        objective_function,
+        becker_constructive_algorithm,
+        perturb_random,
+        visit_NS,
+        10,
+        log_visits=True,
+        debug=False,
+    )
+    benchmark(
+        "results_neigh_diversity.json",
+        ILS_NS_10,
+        benchmark_neighbourhood_diversity,
+        lambda x: plot_pairwise_diversity_cdf(
+            x, folder="ILS", filename="NS", title="ILS N_S 10 iterations"
+        ),
+        debug=False,
+    )
     # benchmark(
     #     "results_execution_time.json",
     #     benchmark_execution_time,

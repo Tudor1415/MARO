@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCAimport PCA
 
 
 def plot_permutations_with_pca(
@@ -215,3 +215,29 @@ def plot_execution_time_statistics(results):
     os.makedirs("plots/exec_times", exist_ok=True)
     plt.savefig("plots/exec_times/execution_time_statistics.pdf")
     plt.show()
+
+
+def plot_starting_solution_benchmark_statistics(results):
+    """
+    plots the score of the different starting solutions.
+    """
+
+    improvements_becker_random, improvements_random_monotone = [], []
+    for key, (monotone, random, becker) in results.items():
+        improvement_becker_random = (becker - random) / random
+        improvements_becker_random.append(improvement_becker_random)
+        improvement_random_monotone = (random - monotone) / monotone
+        improvements_random_monotone.append(improvement_random_monotone)
+
+    mean_barker_random = np.mean(improvements_becker_random)
+    std_barker_random = np.std(improvements_becker_random)
+
+    mean_random_monotone = np.mean(improvements_random_monotone)
+    std_random_monotone = np.std(improvements_random_monotone)
+
+    print(
+        f"Mean relative improvement of Becker over Random: {mean_barker_random*100:.2f}% ± {std_barker_random*100:.2f}%"
+    )
+    print(
+        f"Mean relative improvement of Random over Monotone: {mean_random_monotone*100:.2f}% ± {std_random_monotone*100:.2f}%"
+    )

@@ -1,0 +1,6 @@
+  Value               : 688601
+  Value + Diagonals   : 1038844
+  Degree of linearity : 0.827728
+  Linear ordering     :  4 40 32 28 36 2 3 5 24 38 35 37 34 33 29 31 7 8 10 9 1 20 16 21 25 6 17 18 19 30 23 22 13 12 11 26 27 14 15 44 39 43 41 42
+  Number of b&c nodes :              1
+  Total time          :        0:02.47
