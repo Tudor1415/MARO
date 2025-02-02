@@ -256,7 +256,6 @@ def LS(
     objective_function,
     visit_N,
     start_permutation,
-    max_iter=40,
     log_visits=False,
     debug=False,
 ):
@@ -283,7 +282,9 @@ def LS(
     visited = []
     current_permutation = start_permutation
     best_value = objective_function(matrix, current_permutation)
-    for iteration in range(max_iter):
+    last_value = -np.inf
+    while best_value > last_value:
+        last_value = best_value
         # Perform a local search on the current solution
         new_permutation = visit_N(matrix, current_permutation, objective_function)
         if log_visits:
@@ -296,7 +297,7 @@ def LS(
             best_value = new_value
             if debug:
                 print(
-                    f"Iteration {iteration}: Found better permutation {new_permutation} with value {new_value}"
+                    f"Found better permutation {new_permutation} with value {new_value}"
                 )
 
     if log_visits:
@@ -332,7 +333,6 @@ def ILS(
     perturbation,
     visit_N,
     max_iter=10,
-    max_local_iter=40,
     log_visits=False,
     debug=False,
 ):
@@ -366,7 +366,6 @@ def ILS(
                 visit_N=visit_N,
                 start_permutation=current_permutation,
                 log_visits=True,
-                max_iter=max_local_iter,
             )
         else:
             local_best_permutation, best_value = LS(
@@ -374,7 +373,6 @@ def ILS(
                 objective_function=objective_function,
                 visit_N=visit_N,
                 start_permutation=current_permutation,
-                max_iter=max_local_iter,
             )
         if best_value > objective_function(matrix, local_best_permutation):
             best_permutation = local_best_permutation

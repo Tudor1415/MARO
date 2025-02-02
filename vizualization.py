@@ -1,7 +1,7 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
-import os
 
 
 def plot_permutations_with_pca(
@@ -123,28 +123,44 @@ def plot_score_evolution(results):
         plt.show()
 
 
-def plot_pairwise_diversity_cdf(results, folder="default", filename="default"):
+def plot_pairwise_diversity_cdf(
+    results, folder="default", filename="default", title="default"
+):
     """
     Function to plot the CDF of pairwise diversity over iterations.
 
     Args:
         results (dict of list of floats): Dict linking instance name to list of pairwise diversities over iterations.
     """
-    all_values = set()
+    all_pairwise_values = []
+    all_start_end_values = []
     for key, values in results.items():
-        for value in values:
-            all_values.add(value)
+        pairwise_distances, start_end_distances = values
+        all_start_end_values.append(start_end_distances)
+        for value in pairwise_distances:
+            all_pairwise_values.append(value)
     plt.figure(figsize=(10, 6))
-    sorted_values = np.sort(list(all_values))
-    cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
-    plt.plot(sorted_values, cdf, linestyle="-", color="b", alpha=0.7)
+    sorted_pairwise_values = np.sort(all_pairwise_values)
+    cdf = np.arange(1, len(sorted_pairwise_values) + 1) / len(sorted_pairwise_values)
+    plt.plot(sorted_pairwise_values, cdf, linestyle="-", color="b", alpha=0.7)
     plt.xlabel("Pairwise Diversity")
     plt.xticks(np.arange(0, 1.1, 0.1))
     plt.ylabel("CDF")
-    plt.title("Pairwise Diversity CDF for {}".format(key))
+    plt.title("Pairwise Diversity CDF for {}".format(title))
     plt.grid(True)
     os.makedirs(f"plots/diversity/{folder}", exist_ok=True)
     plt.savefig(f"plots/diversity/{folder}/{filename}.pdf")
+    plt.show()
+
+    plt.figure(figsize=(10, 6))
+    plt.hist(all_start_end_values, bins=30, color="b", alpha=0.7, edgecolor="black")
+    plt.xlabel("Start-End Distance")
+    plt.xticks(np.arange(0, 1.1, 0.1))
+    plt.ylabel("CDF")
+    plt.title("Start-End Diversity CDF for {}".format(title))
+    plt.grid(True)
+    os.makedirs(f"plots/start_end_distance/{folder}", exist_ok=True)
+    plt.savefig(f"plots/start_end_distance/{folder}/{filename}.pdf")
     plt.show()
 
 

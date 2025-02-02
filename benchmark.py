@@ -387,7 +387,7 @@ if __name__ == "__main__":
     #     debug=False,
     # )
 
-    ILS_NI_10_40 = lambda x: ILS(
+    ILS_NI_10 = lambda x: ILS(
         x,
         objective_function,
         becker_constructive_algorithm,
@@ -399,9 +399,9 @@ if __name__ == "__main__":
     )
     benchmark(
         "results_neigh_diversity.json",
-        ILS_NI_10_40,
+        ILS_NI_10,
         benchmark_neighbourhood_diversity,
-        lambda x: plot_pairwise_diversity_cdf(x, folder="ILS", filename="NI"),
+        lambda x: plot_pairwise_diversity_cdf(x, folder="ILS", filename="NI", title=""),
         debug=False,
     )
     # benchmark(
