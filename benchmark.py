@@ -333,13 +333,24 @@ def benchmark(
 
 
 if __name__ == "__main__":
-    # benchmark(
-    #     "results_neigh.json",
-    #     benchmark_neighbourhood_instance,
-    #     print_neighbourhood_benchmark_statistics,
-    #     max_iter=100,
-    #     debug=False,
-    # )
+
+    ILS_10 = lambda matrix, neigh: ILS(
+        matrix,
+        objective_function,
+        becker_constructive_algorithm,
+        perturb_random,
+        neigh,
+        10,
+        log_visits=False,
+        debug=False,
+    )
+    benchmark(
+        "results_neigh.json",
+        ILS_10,
+        benchmark_neighbourhood_instance,
+        print_neighbourhood_benchmark_statistics,
+        debug=False,
+    )
     # benchmark(
     #     "results_start.json",
     #     benchmark_starting_solution_instance,
@@ -387,23 +398,25 @@ if __name__ == "__main__":
     #     debug=False,
     # )
 
-    ILS_NI_10 = lambda x: ILS(
-        x,
-        objective_function,
-        becker_constructive_algorithm,
-        perturb_random,
-        visit_NI,
-        10,
-        log_visits=True,
-        debug=False,
-    )
-    benchmark(
-        "results_neigh_diversity.json",
-        ILS_NI_10,
-        benchmark_neighbourhood_diversity,
-        lambda x: plot_pairwise_diversity_cdf(x, folder="ILS", filename="NI", title=""),
-        debug=False,
-    )
+    # ILS_NI_10 = lambda x: ILS(
+    #     x,
+    #     objective_function,
+    #     becker_constructive_algorithm,
+    #     perturb_random,
+    #     visit_NI,
+    #     10,
+    #     log_visits=True,
+    #     debug=False,
+    # )
+    # benchmark(
+    #     "results_neigh_diversity.json",
+    #     ILS_NI_10,
+    #     benchmark_neighbourhood_diversity,
+    #     lambda x: plot_pairwise_diversity_cdf(
+    #         x, folder="ILS", filename="NI", title="ILS N_I 10 iterations"
+    #     ),
+    #     debug=False,
+    # )
     # benchmark(
     #     "results_execution_time.json",
     #     benchmark_execution_time,

@@ -153,7 +153,9 @@ def plot_pairwise_diversity_cdf(
     plt.show()
 
     plt.figure(figsize=(10, 6))
-    plt.hist(all_start_end_values, bins=30, color="b", alpha=0.7, edgecolor="black")
+    sorted_start_end_values = np.sort(all_start_end_values)
+    cdf = np.arange(1, len(sorted_start_end_values) + 1) / len(sorted_start_end_values)
+    plt.plot(sorted_start_end_values, cdf, linestyle="-", color="orange", alpha=0.7)
     plt.xlabel("Start-End Distance")
     plt.xticks(np.arange(0, 1.1, 0.1))
     plt.ylabel("CDF")
