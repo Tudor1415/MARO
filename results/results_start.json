@@ -1,14 +1,182 @@
 {
     "instances/t70x11xx.mat": [
-        234789152.7,
-        236043124
+        342019769.5,
+        343094457
     ],
     "instances/t74d11xx.mat": [
-        462609.4,
-        458730
+        671757.6,
+        664223
     ],
     "instances/t70u11xx.mat": [
-        19359040.0,
-        20374600
+        27242600.0,
+        27259600
+    ],
+    "instances/stabu2.mat": [
+        625710.4,
+        624646
+    ],
+    "instances/t65f11xx.mat": [
+        253500.4,
+        254509
+    ],
+    "instances/stabu1.mat": [
+        420150.5,
+        420541
+    ],
+    "instances/tiw56r67.mat": [
+        269401.4,
+        270224
+    ],
+    "instances/tiw56n62.mat": [
+        216978.0,
+        216884
+    ],
+    "instances/t59f11xx.mat": [
+        140215.9,
+        140436
+    ],
+    "instances/stabu3.mat": [
+        638790.3,
+        636527
+    ],
+    "instances/tiw56r72.mat": [
+        340781.7,
+        341261
+    ],
+    "instances/t65w11xx.mat": [
+        165702337.6,
+        165785239
+    ],
+    "instances/t59d11xx.mat": [
+        161879.6,
+        161525
+    ],
+    "instances/t70l11xx.mat": [
+        27957.6,
+        27988
+    ],
+    "instances/t65d11xx.mat": [
+        282297.9,
+        283961
+    ],
+    "instances/tiw56n54.mat": [
+        112314.3,
+        112500
+    ],
+    "instances/t70i11xx.mat": [
+        28197754.3,
+        28203188
+    ],
+    "instances/tiw56r54.mat": [
+        126715.8,
+        127278
+    ],
+    "instances/t75d11xx.mat": [
+        683381.7,
+        682767
+    ],
+    "instances/tiw56r58.mat": [
+        160054.0,
+        160232
+    ],
+    "instances/t65l11xx.mat": [
+        18315.0,
+        18358
+    ],
+    "instances/t59b11xx.mat": [
+        244853.5,
+        245140
+    ],
+    "instances/t59i11xx.mat": [
+        9160320.7,
+        9116956
+    ],
+    "instances/t65n11xx.mat": [
+        38698.6,
+        38693
+    ],
+    "instances/t75e11xx.mat": [
+        3086555.5,
+        3086140
+    ],
+    "instances/t75n11xx.mat": [
+        113351.6,
+        113048
+    ],
+    "instances/tiw56n58.mat": [
+        153965.3,
+        153639
+    ],
+    "instances/t70b11xx.mat": [
+        620553.0,
+        622839
+    ],
+    "instances/t70d11xn.mat": [
+        437404.2,
+        438179
+    ],
+    "instances/t69r11xx.mat": [
+        859264.4,
+        855460
+    ],
+    "instances/tiw56n66.mat": [
+        276253.2,
+        276434
+    ],
+    "instances/t65i11xx.mat": [
+        16364072.3,
+        16381174
+    ],
+    "instances/t70k11xx.mat": [
+        69556490.0,
+        69520500
+    ],
+    "instances/t65b11xx.mat": [
+        408867.0,
+        410065
+    ],
+    "instances/tiw56n67.mat": [
+        276827.6,
+        277691
+    ],
+    "instances/t59n11xx.mat": [
+        24985.1,
+        24931
+    ],
+    "instances/t70w11xx.mat": [
+        266174369.0,
+        265763804
+    ],
+    "instances/tiw56r66.mat": [
+        255214.2,
+        255645
+    ],
+    "instances/t70n11xx.mat": [
+        63625.7,
+        63811
+    ],
+    "instances/tiw56n72.mat": [
+        460800.3,
+        459342
+    ],
+    "instances/t75i11xx.mat": [
+        72546951.7,
+        72121651
+    ],
+    "instances/t70d11xx.mat": [
+        449312.8,
+        449706
+    ],
+    "instances/t75k11xx.mat": [
+        124478.5,
+        124665
+    ],
+    "instances/t75u11xx.mat": [
+        62967041.1,
+        62840266
+    ],
+    "instances/t70f11xx.mat": [
+        412337.2,
+        412191
     ]
 }
