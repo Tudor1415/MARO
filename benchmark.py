@@ -84,7 +84,9 @@ def benchmark_visited_points(matrix, search_function, debug=False):
     return visited
 
 
-def plot_permutations_with_pca_benchmark(results, folder="default"):
+def plot_permutations_with_pca_benchmark(
+    results, folder="visited_permutations", filename="visited_NI_"
+):
     """
     Plots the visited points during the ILS algorithm execution.
     Args:
@@ -93,7 +95,7 @@ def plot_permutations_with_pca_benchmark(results, folder="default"):
     for key, visited_points in results.items():
         matrix = read_square_matrix_from_file(key, False)["matrix"]
         obj_func = lambda x: objective_function(matrix, x)
-        filename = key.split("/")[-1].split(".")[0]
+        filename += key.split("/")[-1].split(".")[0]
         plot_permutations_with_pca(
             visited_points, obj_func, folder=folder, filename=filename
         )
@@ -285,7 +287,7 @@ def benchmark(
         "instances/" + file_name
         for file_name in os.listdir("instances")
         if file_name.endswith(".mat")
-    ]
+    ][:1]
 
     for file_name in tqdm(files, desc="Processing files"):
         try:
@@ -339,13 +341,7 @@ if __name__ == "__main__":
     #     max_iter=100,
     #     debug=False,
     # )
-    # benchmark(
-    #     "results_visited_points.json",
-    #     benchmark_visited_points,
-    #     lambda x: plot_permutations_with_pca_benchmark(x, "ILS"),
-    #     max_iter=10,
-    #     debug=False,
-    # )
+
     # benchmark(
     #     "results_score_evolution.json",
     #     benchmark_score_evolution,
@@ -354,34 +350,25 @@ if __name__ == "__main__":
     #     debug=False,
     # )
 
-    # ILS_NS_10_40 = lambda x: ILS(
-    #     x,
-    #     objective_function,
-    #     becker_constructive_algorithm,
-    #     perturb_random,
-    #     visit_NS,
-    #     10,
-    #     log_visits=True,
-    #     debug=False,
-    # )
-    # benchmark(
-    #     "results_neigh_diversity.json",
-    #     ILS_NS_10_40,
-    #     benchmark_neighbourhood_diversity,
-    #     plot_pairwise_diversity_cdf,
-    #     debug=False,
-    # )
-
-    # ILS_NI_10 = lambda x: ILS(
-    #     x,
-    #     objective_function,
-    #     becker_constructive_algorithm,
-    #     perturb_random,
-    #     visit_NI,
-    #     10,
-    #     log_visits=True,
-    #     debug=False,
-    # )
+    ILS_NI_10 = lambda x: ILS(
+        x,
+        objective_function,
+        becker_constructive_algorithm,
+        perturb_random,
+        visit_NI,
+        10,
+        log_visits=True,
+        debug=False,
+    )
+    benchmark(
+        "results_visited_points.json",
+        ILS_NI_10,
+        benchmark_visited_points,
+        lambda x: plot_permutations_with_pca_benchmark(
+            x, folder="visited_permutations", filename="visited_NI_"
+        ),
+        debug=True,
+    )
     # benchmark(
     #     "results_neigh_diversity.json",
     #     ILS_NI_10,
@@ -403,14 +390,23 @@ if __name__ == "__main__":
         debug=False,
     )
     benchmark(
-        "results_neigh_diversity.json",
+        "results_visited_points.json",
         ILS_NS_10,
-        benchmark_neighbourhood_diversity,
-        lambda x: plot_pairwise_diversity_cdf(
-            x, folder="ILS", filename="NS", title="ILS N_S 10 iterations"
+        benchmark_visited_points,
+        lambda x: plot_permutations_with_pca_benchmark(
+            x, folder="visited_permutations", filename="visited_NS_"
         ),
         debug=False,
     )
+    # benchmark(
+    #     "results_neigh_diversity.json",
+    #     ILS_NS_10,
+    #     benchmark_neighbourhood_diversity,
+    #     lambda x: plot_pairwise_diversity_cdf(
+    #         x, folder="ILS", filename="NS", title="ILS N_S 10 iterations"
+    #     ),
+    #     debug=False,
+    # )
     # benchmark(
     #     "results_execution_time.json",
     #     benchmark_execution_time,

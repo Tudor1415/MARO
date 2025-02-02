@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCAimport PCA
+from sklearn.decomposition import PCA
 
 
 def plot_permutations_with_pca(

@@ -322,7 +322,7 @@ def perturb_random(permutation, percentage=1):
     to_shuffle = int(percentage * n)
     indices = list(range(n))
     np.random.shuffle(indices)
-    perturbed_permutation = permutation[:to_shuffle] + indices[to_shuffle:]
+    perturbed_permutation = indices[:to_shuffle] + permutation[to_shuffle:]
     return perturbed_permutation
 
 
@@ -366,6 +366,7 @@ def ILS(
                 visit_N=visit_N,
                 start_permutation=current_permutation,
                 log_visits=True,
+                debug=debug,
             )
         else:
             local_best_permutation, best_value = LS(
@@ -373,6 +374,8 @@ def ILS(
                 objective_function=objective_function,
                 visit_N=visit_N,
                 start_permutation=current_permutation,
+                log_visits=False,
+                debug=debug,
             )
         if best_value > objective_function(matrix, local_best_permutation):
             best_permutation = local_best_permutation
