@@ -1,0 +1,16 @@
+[project]
+name = "lop-metaheuristics"
+version = "1.0.0"
+description = "GRASP, Iterated Local Search and Tabu Search for the Linear Ordering Problem, with a reproducible benchmark study on LOLIB and xLOLIB"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = ["numpy>=1.22", "scipy>=1.8", "matplotlib>=3.5"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[tool.setuptools]
+packages = ["lop"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

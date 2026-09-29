@@ -1,0 +1,212 @@
+{
+ "r100a2": {
+  "n": 100,
+  "raw_optimum": 197652,
+  "optsicom_normalised": 145270,
+  "offset_sum_min": 52382,
+  "mitchell_values_file": 197652
+ },
+ "r100b2": {
+  "n": 100,
+  "raw_optimum": 197423,
+  "optsicom_normalised": 143271,
+  "offset_sum_min": 54152,
+  "mitchell_values_file": 197423
+ },
+ "r100c2": {
+  "n": 100,
+  "raw_optimum": 193952,
+  "optsicom_normalised": 141702,
+  "offset_sum_min": 52250,
+  "mitchell_values_file": 193952
+ },
+ "r100d2": {
+  "n": 100,
+  "raw_optimum": 196397,
+  "optsicom_normalised": 142630,
+  "offset_sum_min": 53767,
+  "mitchell_values_file": 196397
+ },
+ "r100e2": {
+  "n": 100,
+  "raw_optimum": 200178,
+  "optsicom_normalised": 147416,
+  "offset_sum_min": 52762,
+  "mitchell_values_file": 200178
+ },
+ "r150a0": {
+  "n": 150,
+  "raw_optimum": 550666,
+  "optsicom_normalised": 360978,
+  "offset_sum_min": 189688,
+  "mitchell_values_file": 550666
+ },
+ "r150a1": {
+  "n": 150,
+  "raw_optimum": 504308,
+  "optsicom_normalised": 349251,
+  "offset_sum_min": 155057,
+  "mitchell_values_file": 504308
+ },
+ "r150b0": {
+  "n": 150,
+  "raw_optimum": 554338,
+  "optsicom_normalised": 367635,
+  "offset_sum_min": 186703,
+  "mitchell_values_file": 554338
+ },
+ "r150b1": {
+  "n": 150,
+  "raw_optimum": 500841,
+  "optsicom_normalised": 347627,
+  "offset_sum_min": 153214,
+  "mitchell_values_file": 500841
+ },
+ "r150c0": {
+  "n": 150,
+  "raw_optimum": 551451,
+  "optsicom_normalised": 363895,
+  "offset_sum_min": 187556,
+  "mitchell_values_file": 551451
+ },
+ "r150c1": {
+  "n": 150,
+  "raw_optimum": 500757,
+  "optsicom_normalised": 346492,
+  "offset_sum_min": 154265,
+  "mitchell_values_file": 500757
+ },
+ "r150d0": {
+  "n": 150,
+  "raw_optimum": 552772,
+  "optsicom_normalised": 363180,
+  "offset_sum_min": 189592,
+  "mitchell_values_file": 552772
+ },
+ "r150d1": {
+  "n": 150,
+  "raw_optimum": 501372,
+  "optsicom_normalised": 348902,
+  "offset_sum_min": 152470,
+  "mitchell_values_file": 501372
+ },
+ "r150e0": {
+  "n": 150,
+  "raw_optimum": 554400,
+  "optsicom_normalised": 367181,
+  "offset_sum_min": 187219,
+  "mitchell_values_file": 554400
+ },
+ "r150e1": {
+  "n": 150,
+  "raw_optimum": 501422,
+  "optsicom_normalised": 349910,
+  "offset_sum_min": 151512,
+  "mitchell_values_file": 501422
+ },
+ "r200a0": {
+  "n": 200,
+  "raw_optimum": 989422,
+  "optsicom_normalised": 654604,
+  "offset_sum_min": 334818,
+  "mitchell_values_file": 989422
+ },
+ "r200a1": {
+  "n": 200,
+  "raw_optimum": 889222,
+  "optsicom_normalised": 616399,
+  "offset_sum_min": 272823,
+  "mitchell_values_file": 889222
+ },
+ "r200b0": {
+  "n": 200,
+  "raw_optimum": 984081,
+  "optsicom_normalised": 651237,
+  "offset_sum_min": 332844,
+  "mitchell_values_file": 984081
+ },
+ "r200b1": {
+  "n": 200,
+  "raw_optimum": 893867,
+  "optsicom_normalised": 622112,
+  "offset_sum_min": 271755,
+  "mitchell_values_file": 893867
+ },
+ "r200c0": {
+  "n": 200,
+  "raw_optimum": 990568,
+  "optsicom_normalised": 657441,
+  "offset_sum_min": 333127,
+  "mitchell_values_file": 990568
+ },
+ "r200c1": {
+  "n": 200,
+  "raw_optimum": 882945,
+  "optsicom_normalised": 611956,
+  "offset_sum_min": 270989,
+  "mitchell_values_file": 882945
+ },
+ "r200d0": {
+  "n": 200,
+  "raw_optimum": 989123,
+  "optsicom_normalised": 654375,
+  "offset_sum_min": 334748,
+  "mitchell_values_file": 989123
+ },
+ "r200d1": {
+  "n": 200,
+  "raw_optimum": 888563,
+  "optsicom_normalised": 616617,
+  "offset_sum_min": 271946,
+  "mitchell_values_file": 888562
+ },
+ "r200e0": {
+  "n": 200,
+  "raw_optimum": 980354,
+  "optsicom_normalised": 645207,
+  "offset_sum_min": 335147,
+  "mitchell_values_file": 980354
+ },
+ "r200e1": {
+  "n": 200,
+  "raw_optimum": 883948,
+  "optsicom_normalised": 611306,
+  "offset_sum_min": 272642,
+  "mitchell_values_file": 883948
+ },
+ "r250a0": {
+  "n": 250,
+  "raw_optimum": 1545431,
+  "optsicom_normalised": 1019120,
+  "offset_sum_min": 526311,
+  "mitchell_values_file": 1545431
+ },
+ "r250b0": {
+  "n": 250,
+  "raw_optimum": 1538410,
+  "optsicom_normalised": 1013737,
+  "offset_sum_min": 524673,
+  "mitchell_values_file": 1538410
+ },
+ "r250c0": {
+  "n": 250,
+  "raw_optimum": 1534036,
+  "optsicom_normalised": 1010961,
+  "offset_sum_min": 523075,
+  "mitchell_values_file": 1534036
+ },
+ "r250d0": {
+  "n": 250,
+  "raw_optimum": 1540117,
+  "optsicom_normalised": 1015041,
+  "offset_sum_min": 525076,
+  "mitchell_values_file": 1540117
+ },
+ "r250e0": {
+  "n": 250,
+  "raw_optimum": 1531709,
+  "optsicom_normalised": 1008267,
+  "offset_sum_min": 523442,
+  "mitchell_values_file": 1531709
+ }
+}
